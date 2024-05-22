@@ -9,7 +9,6 @@ import com.davay.android.app.AppComponentHolder
 import com.davay.android.base.BaseFragment
 import com.davay.android.databinding.FragmentLoadBinding
 import com.davay.android.di.ScreenComponent
-import com.davay.android.feature.changename.presentation.ChangeNameFragment
 import com.davay.android.feature.load.di.DaggerLoadFragmentComponent
 
 class LoadFragment : BaseFragment<FragmentLoadBinding, LoadViewModel>(
@@ -38,15 +37,6 @@ class LoadFragment : BaseFragment<FragmentLoadBinding, LoadViewModel>(
         binding.button2.setOnClickListener { _ ->
             viewModel.navigate(R.id.action_loadFragment_to_registrationFragment)
         }
-
-        binding.button3.setOnClickListener { _ ->
-            showBottomSheet("Дима")
-        }
-    }
-
-    private fun showBottomSheet(oldName: String) {
-        val bottomSheetFragment = ChangeNameFragment.newInstance(oldName)
-        bottomSheetFragment.show(parentFragmentManager, "tag")
     }
 
 }

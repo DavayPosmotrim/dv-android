@@ -9,7 +9,4 @@
     <string name="registration_two_letters_minimum">Минимум две буквы</string>
     <string name="registration_just_letters">Только буквы</string>
     <string name="registration_not_more_letters">Не более 16 символов</string>
-
-    <string name="change_name_enter">Сохранить</string>
-    <string name="change_name_enter_your_name">Введите ваше имя</string>
 </resources>
