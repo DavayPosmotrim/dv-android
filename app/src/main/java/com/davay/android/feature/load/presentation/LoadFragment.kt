@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.davai.uikit.progressbutton.ProgressButtonView
 import com.davay.android.R
 import com.davay.android.app.AppComponentHolder
 import com.davay.android.base.BaseFragment
@@ -63,7 +64,7 @@ class LoadFragment : BaseFragment<FragmentLoadBinding, LoadViewModel>(
             cornerRadius = resources.getDimensionPixelSize(com.davai.uikit.R.dimen.card_radius_24)
         }.also {
             lifecycleScope.launch {
-                delay(1000L)
+                delay(ProgressButtonView.MS_IN_SECOND)
                 it.startAnimation(this)
             }
         }

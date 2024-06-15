@@ -73,7 +73,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 
-    <com.davai.uikit.ProgressButtonView
+    <com.davai.uikit.progressbutton.ProgressButtonView
         android:id="@+id/ccp_progress_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height_48"
