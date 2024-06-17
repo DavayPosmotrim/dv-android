@@ -87,5 +87,6 @@
     <string name="create_session_choose_compilations_one">Выберите хотя бы одну подборку</string>
     <string name="create_session_choose_genre">Выберите понравившиеся жанры</string>
     <string name="create_session_choose_genre_one">Выберите хотя бы один жанр</string>
+    <string name="participates">Участники</string>
 
 </resources>

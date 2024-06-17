@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_loadFragment_to_splashFragment"
             app:destination="@id/splashFragment" />
+        <action
+            android:id="@+id/action_loadFragment_to_lastSessionFragment"
+            app:destination="@id/lastSessionFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
@@ -104,5 +107,13 @@
         android:name="com.davay.android.feature.createsession.presentation.createsession.CreateSessionFragment"
         android:label="fragment_create_session"
         tools:layout="@layout/fragment_create_session" />
+
+
+    <fragment
+        android:id="@+id/lastSessionFragment"
+        android:name="com.davay.android.feature.lastsession.presentation.LastSessionFragment"
+        android:label="fragment_last_session"
+        tools:layout="@layout/fragment_last_session" />
+
 
 </navigation>
