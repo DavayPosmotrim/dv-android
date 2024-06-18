@@ -20,6 +20,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+
+    <com.davai.uikit.ToolbarView
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:subtitle="Сеанс VMst456"
+        app:title="23 сентября"
+        app:start_icon_is_visible="true"
+        app:start_icon="@drawable/ic_arrow_back"
+        />
+
     <LinearLayout
         android:id="@+id/tabs"
         style="@style/TabLayout"
@@ -51,39 +66,30 @@
 
     </LinearLayout>
 
-    <com.davai.uikit.ToolbarView
-        android:id="@+id/tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:subtitle="Сеанс VMst456"
-        app:title="23 сентября"
-        app:start_icon_is_visible="true"
-        app:start_icon="@drawable/ic_arrow_back"
-        />
+
 
     <View
         android:id="@+id/view_bottom"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_negative_16"
+        android:layout_marginTop="@dimen/margin_24"
         android:background="@drawable/round_top_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btn_continue" />
+        app:layout_constraintTop_toBottomOf="@id/view_top" />
 
-    <com.davai.uikit.ButtonView
-        android:id="@+id/btn_continue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_16"
-        android:layout_marginBottom="@dimen/margin_20"
-        app:button_text="@string/create_session_continue"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFilm"
+        tools:itemCount="4"
+        tools:listitem="@layout/movie_card_view"
+        android:layout_marginTop="@dimen/margin_16"
+        android:padding="@dimen/margin_8"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_bottom"
+        android:layout_height="0dp"
+        android:layout_width="0dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
