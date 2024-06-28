@@ -43,4 +43,6 @@
     <color name="error">#DE1135</color>
     <color name="info">#2E2D2D</color>
 
+    <color name="transparent_black">#4D272727</color>
+
 </resources>

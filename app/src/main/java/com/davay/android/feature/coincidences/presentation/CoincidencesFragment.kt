@@ -3,7 +3,12 @@ package com.davay.android.feature.coincidences.presentation
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -11,6 +16,7 @@ import com.davay.android.app.AppComponentHolder
 import com.davay.android.base.BaseFragment
 import com.davay.android.databinding.FragmentCoincidencesBinding
 import com.davay.android.di.ScreenComponent
+import com.davay.android.feature.coincidences.bottomsheetdialog.RouletteBottomSheetDialogFragment
 import com.davay.android.feature.coincidences.di.DaggerCoincidencesFragmentComponent
 import com.davay.android.feature.coincidences.presentation.adapter.MoviesGridAdapter
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +32,29 @@ class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, Coinciden
         Toast.makeText(requireContext(), "Clicked!", Toast.LENGTH_SHORT).show()
     }
 
+    private val bottomSheetFragmentLifecycleCallbacks =
+        object : FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentCreated(
+                fm: FragmentManager,
+                f: Fragment,
+                savedInstanceState: Bundle?
+            ) {
+                super.onFragmentCreated(fm, f, savedInstanceState)
+                if (f is RouletteBottomSheetDialogFragment) {
+                    showPointersAndShadow()
+                }
+            }
+
+            override fun onFragmentDestroyed(fm: FragmentManager, f: Fragment) {
+                super.onFragmentDestroyed(fm, f)
+                if (f is RouletteBottomSheetDialogFragment) {
+                    hidePointersAndShadow()
+                }
+            }
+        }
+
+    private var rouletteBottomSheetDialogFragment: RouletteBottomSheetDialogFragment? = null
+
     override fun diComponent(): ScreenComponent = DaggerCoincidencesFragmentComponent
         .builder()
         .appComponent(AppComponentHolder.getComponent())
@@ -36,22 +65,54 @@ class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, Coinciden
         setupToolbar()
         setupMoviesGrid()
         subscribe()
-        viewModel.getCoincidences()
+
+        // При смене конфигурации не нужно показывать подсказку
+        if (savedInstanceState == null) {
+            showHint()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        parentFragmentManager.unregisterFragmentLifecycleCallbacks(
+            bottomSheetFragmentLifecycleCallbacks
+        )
+    }
+
+    /**
+     * Показывает подсказку, если она еще не показана
+     */
+    private fun showHint() {
+        if (viewModel.isHintShown()) {
+            val existingFragment = parentFragmentManager.findFragmentByTag(
+                RouletteBottomSheetDialogFragment::class.java.simpleName
+            )
+            if (existingFragment is RouletteBottomSheetDialogFragment) {
+                rouletteBottomSheetDialogFragment = existingFragment
+            }
+        } else {
+            showBottomSheetDialogFragment()
+        }
+
+        parentFragmentManager.registerFragmentLifecycleCallbacks(
+            bottomSheetFragmentLifecycleCallbacks,
+            true
+        )
     }
 
     private fun setupMoviesGrid() = with(binding.coincidencesList) {
         adapter = moviesGridAdapter
     }
 
-    private fun setupToolbar() = with(binding.toolbarView) {
-        addStatusBarSpacer()
-        setEndIcon(com.davai.uikit.R.drawable.ic_random)
-        showEndIcon()
-        setEndIconClickListener {
-            Toast.makeText(requireContext(), "Navigate to random.", Toast.LENGTH_SHORT).show()
-        }
-        setStartIconClickListener {
-            Toast.makeText(requireContext(), "Navigate back.", Toast.LENGTH_SHORT).show()
+    private fun setupToolbar() {
+        binding.toolbarView.apply {
+            addStatusBarSpacer()
+            setEndIconClickListener {
+                Toast.makeText(requireContext(), "Navigate to random.", Toast.LENGTH_SHORT).show()
+            }
+            setStartIconClickListener {
+                viewModel.navigateBack()
+            }
         }
     }
 
@@ -73,6 +134,7 @@ class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, Coinciden
                 updateVisibility(coincidencesListIsVisible = true)
                 moviesGridAdapter.setData(state.data)
             }
+
             is UiState.Error -> {
                 Toast.makeText(requireContext(), "Error occurred!", Toast.LENGTH_SHORT).show()
             }
@@ -87,5 +149,55 @@ class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, Coinciden
         progressBar.isVisible = progressBarIsVisible
         coincidencesList.isVisible = coincidencesListIsVisible
         emptyPlaceholder.root.isVisible = emptyMessageIsVisible
+    }
+
+    private fun showBottomSheetDialogFragment() {
+        if (rouletteBottomSheetDialogFragment == null) {
+            rouletteBottomSheetDialogFragment = RouletteBottomSheetDialogFragment()
+            rouletteBottomSheetDialogFragment?.show(
+                parentFragmentManager,
+                RouletteBottomSheetDialogFragment::class.java.simpleName
+            )
+        }
+    }
+
+    private fun showPointersAndShadow() = with(binding) {
+        listOf(ivFigureArrow, viewDialogShadow).forEach {
+            it.visibility = View.VISIBLE
+            addStatusBarSpacerAndShowPointer(requireView())
+        }
+    }
+
+    private fun hidePointersAndShadow() = with(binding) {
+        listOf(ivDices, ivWhitePointer, ivFigureArrow, viewDialogShadow).forEach {
+            it.visibility = View.GONE
+        }
+    }
+
+    private fun addStatusBarSpacerAndShowPointer(view: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            applySpaceHeightAndShowPointer(statusBarHeight)
+            insets
+        }
+        view.requestApplyInsets()
+    }
+
+    private fun applySpaceHeightAndShowPointer(statusBarHeight: Int) = with(binding) {
+        topSpace.let {
+            val layoutParams = it.layoutParams
+            layoutParams.height = statusBarHeight
+            it.layoutParams = layoutParams
+        }
+
+        ivWhitePointer.post {
+            val layoutParams = ivWhitePointer.layoutParams as ConstraintLayout.LayoutParams
+            layoutParams.topMargin = statusBarHeight
+            ivWhitePointer.apply {
+                visibility = View.VISIBLE
+                this.layoutParams = layoutParams
+            }
+            ivDices.visibility = View.VISIBLE
+        }
     }
 }

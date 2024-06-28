@@ -42,6 +42,10 @@
         <item name="android:textColor">@color/text_headings</item>
     </style>
 
+    <style name="Text.Headline.Large.NoSpacing">
+        <item name="android:lineSpacingExtra">0sp</item>
+    </style>
+
     <style name="Text.Headline.Large48">
         <item name="android:textSize">48sp</item>
         <item name="android:textColor">@color/text_headings</item>
@@ -147,5 +151,10 @@
         <item name="android:background">@drawable/tab_layout_background</item>
         <item name="tabTextColor">@color/text_caption_dark</item>
         <item name="tabSelectedTextColor">@color/text_light</item>
+    </style>
+
+    <style name="NoShadowBottomSheet" parent="Theme.AppCompat.Light">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
     </style>
 </resources>

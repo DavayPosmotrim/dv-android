@@ -14,7 +14,7 @@
         android:background="@color/icon_light"
         android:contentDescription="@string/movie_cover"
         app:shapeAppearanceOverlay="@style/RoundedImageView"
-        tools:src="@tools:sample/backgrounds/scenic[8]" />
+        tools:src="@tools:sample/backgrounds/scenic" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

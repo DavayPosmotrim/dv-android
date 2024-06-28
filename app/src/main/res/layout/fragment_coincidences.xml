@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,9 +13,64 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:end_icon="@drawable/ic_random"
+        app:end_icon_is_visible="true"
+        app:layout_constraintTop_toTopOf="parent"
         app:start_icon="@drawable/ic_arrow_back"
         app:start_icon_is_visible="true"
         app:title="@string/coincidences_screen_coincidences" />
+
+    <Space
+        android:id="@+id/top_space"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_white_pointer"
+        android:layout_width="@dimen/drag_handle_width_48"
+        android:layout_height="@dimen/drag_handle_width_48"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:contentDescription="@string/icon_with_number_of_matches"
+        android:elevation="@dimen/elevation_4"
+        android:src="@drawable/white_pointer"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_space" />
+
+    <ImageView
+        android:id="@+id/iv_dices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/icon_with_number_of_matches"
+        android:elevation="@dimen/elevation_4"
+        android:src="@drawable/ic_random"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_white_pointer"
+        app:layout_constraintEnd_toEndOf="@+id/iv_white_pointer"
+        app:layout_constraintStart_toStartOf="@+id/iv_white_pointer"
+        app:layout_constraintTop_toTopOf="@id/iv_white_pointer" />
+
+    <ImageView
+        android:id="@+id/iv_figure_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_32"
+        android:contentDescription="@null"
+        android:elevation="4dp"
+        android:src="@drawable/ic_figure_arrow"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view" />
+
+    <View
+        android:id="@+id/view_dialog_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_black"
+        android:elevation="@dimen/elevation_2"
+        android:visibility="gone" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -24,16 +79,21 @@
         android:layout_weight="1"
         android:background="@drawable/main_screen_menu_background"
         android:paddingHorizontal="@dimen/padding_8"
-        android:paddingTop="@dimen/padding_16">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/coincidences_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_16"
             android:background="@drawable/main_screen_menu_background"
-            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2" />
+            app:spanCount="2"
+            tools:itemCount="2"
+            tools:listitem="@layout/movie_card_view" />
 
         <include
             android:id="@+id/empty_placeholder"
@@ -49,5 +109,4 @@
     </FrameLayout>
 
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

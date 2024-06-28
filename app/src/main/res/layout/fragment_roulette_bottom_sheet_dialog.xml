@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bottom_sheet_background"
+    android:orientation="vertical"
+    tools:context=".feature.coincidences.bottomsheetdialog.RouletteBottomSheetDialogFragment">
+
+    <TextView
+        style="@style/Text.Headline.Large.NoSpacing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_16"
+        android:text="@string/roulette_bottomsheet_dialog_trust_occasion" />
+
+    <TextView
+        style="@style/Text.Base.Medium.Bold.NoLineSpacing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_32"
+        android:text="@string/roulette_bottomsheet_dialog_if_you_like_movies"
+        android:textStyle="bold" />
+
+    <TextView
+        style="@style/Text.Base.Medium.Bold.NoLineSpacing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_12"
+        android:text="@string/roulette_bottomsheet_dialog_randomly_choose_film" />
+
+    <TextView
+        style="@style/Text.Base.Medium.Bold.NoLineSpacing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_12"
+        android:text="@string/roulette_bottomsheet_dialog_roulete_lounch_condition" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mbtn_roulette_dialog_footer_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_48"
+        android:layout_marginHorizontal="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_32"
+        android:backgroundTint="@color/primary_base"
+        android:text="@string/roulette_bottomsheet_dialog_got_it"
+        android:textAppearance="@style/Text.Base.Button"
+        android:textColor="@color/text_light"
+        app:cornerRadius="@dimen/card_radius_12" />
+</LinearLayout>

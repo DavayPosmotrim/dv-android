@@ -1,7 +1,6 @@
 package com.davay.android.feature.selectmovie.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -87,11 +86,9 @@ class SelectMovieFragment :
                 swipeCardLayoutManager,
                 onSwipedLeft = {
                     // Add skip method
-                    Log.e("MyLog", "swiped left")
                 },
                 onSwipedRight = {
                     // Add like method
-                    Log.e("MyLog", "swiped right")
                 }
             )
         )

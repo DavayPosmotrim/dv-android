@@ -19,7 +19,8 @@
     <dimen name="session_card_height">240dp</dimen>
     <dimen name="movie_card_height_240">240dp</dimen>
 
-    <dimen name="elevation_1">1dp</dimen>
+    <dimen name="elevation_2">2dp</dimen>
+    <dimen name="elevation_4">4dp</dimen>
 
     <dimen name="padding_4">4dp</dimen>
     <dimen name="padding_8">8dp</dimen>
@@ -42,6 +43,7 @@
     <dimen name="margin_40">40dp</dimen>
     <dimen name="margin_72">72dp</dimen>
     <dimen name="margin_112">112dp</dimen>
+
 
     <dimen name="progress_bar">20dp</dimen>
     <dimen name="frame">4dp</dimen>

@@ -12,7 +12,7 @@
         android:id="@+id/progress_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_height_48"
-        android:elevation="@dimen/elevation_1"
+        android:elevation="@dimen/elevation_2"
         android:gravity="center"
         android:text="@string/match_continue_session"
         android:textAppearance="@style/Text.Base.Button"

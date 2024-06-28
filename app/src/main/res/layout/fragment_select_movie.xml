@@ -48,7 +48,7 @@
             android:layout_height="@dimen/drag_handle_height_8"
             android:layout_marginTop="@dimen/margin_12"
             android:background="@drawable/drag_handle_background"
-            android:elevation="@dimen/elevation_1"
+            android:elevation="@dimen/elevation_2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
