@@ -15,10 +15,20 @@
         android:padding="16dp">
 
         <Button
-            android:id="@+id/btn_to_moview_evalution"
+            android:id="@+id/btn_to_show_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            android:text="To Progress Bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_to_moview_evalution"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@color/done"
             android:text="To DV Movie Evaluation"
             app:layout_constraintEnd_toEndOf="parent"

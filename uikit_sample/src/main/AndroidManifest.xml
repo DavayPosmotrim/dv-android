@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DavayPosmotrim">
         <activity
+            android:name=".ProgressBarViewExample"
+            android:exported="false" />
+        <activity
             android:name=".BlurActivity"
             android:exported="false" />
         <activity

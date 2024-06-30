@@ -70,4 +70,5 @@
     <dimen name="wait_session_button_margin_top">16dp</dimen>
     <dimen name="wait_session_copy_button_icon_size">24dp</dimen>
 
+
 </resources>

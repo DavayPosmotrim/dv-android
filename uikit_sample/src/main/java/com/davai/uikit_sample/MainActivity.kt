@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickListeners() = with(binding) {
         listOf(
+            btnToShowProgressBar,
             btnToMoviewEvalution,
             btnToDvBanner,
             btnToDvButton,
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private fun onClickListener() = View.OnClickListener {
         with(binding) {
             when (it) {
+                btnToShowProgressBar -> startActivity(createIntent(ProgressBarViewExample::class.java))
                 btnToMoviewEvalution -> startActivity(createIntent(MovieEvaluationExample::class.java))
                 btnToDvBanner -> startActivity(createIntent(BannerViewExample::class.java))
                 btnToDvButton -> startActivity(createIntent(ButtonViewExampleActivity::class.java))
