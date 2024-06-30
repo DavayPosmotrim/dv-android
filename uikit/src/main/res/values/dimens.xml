@@ -42,6 +42,7 @@
     <dimen name="margin_40">40dp</dimen>
     <dimen name="margin_72">72dp</dimen>
     <dimen name="margin_112">112dp</dimen>
+    <dimen name="margin_128">128dp</dimen>
 
     <dimen name="progress_bar">20dp</dimen>
     <dimen name="frame">4dp</dimen>
@@ -58,8 +59,6 @@
     <dimen name="drag_handle_height_6">6dp</dimen>
     <dimen name="drag_handle_margin_top_12">12dp</dimen>
     <dimen name="drag_handle_width_48">48dp</dimen>
-
-    <dimen name="change_name_input_margin">136dp</dimen>
 
     <dimen name="banner_angle_neg_12">-12</dimen>
     <dimen name="gradient_rotation_angle_180">180</dimen>

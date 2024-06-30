@@ -26,6 +26,9 @@
             android:id="@+id/action_loadFragment_to_splashFragment"
             app:destination="@id/splashFragment" />
         <action
+            android:id="@+id/action_loadFragment_to_rouletteFragment"
+            app:destination="@id/rouletteFragment" />
+        <action
             android:id="@+id/action_loadFragment_to_coincidencesFragment"
             app:destination="@id/coincidencesFragment" />
         <action
@@ -111,11 +114,14 @@
         android:label="fragment_create_session"
         tools:layout="@layout/fragment_create_session" />
     <fragment
+        android:id="@+id/rouletteFragment"
+        android:name="com.davay.android.feature.roulette.presentation.RouletteFragment"
+        android:label="RouletteFragment" />
+    <fragment
         android:id="@+id/waitSessionFragment"
         android:name="com.davay.android.feature.waitsession.presentation.WaitSessionFragment"
         android:label="fragment_wait_session"
         tools:layout="@layout/fragment_wait_session" />
-
     <fragment
         android:id="@+id/coincidencesFragment"
         android:name="com.davay.android.feature.coincidences.presentation.CoincidencesFragment"

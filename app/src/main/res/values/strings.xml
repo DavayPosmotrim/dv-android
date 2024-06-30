@@ -112,4 +112,14 @@
     <string name="coincidences_screen_coincidences">Совпадения</string>
     <string name="coincidences_screen_empty_coincidences">Пока ничего нет</string>
 
+    <!--  roulette  -->
+    <string name="roulette_magic">Начнём магию, когда подключатся все участники</string>
+    <string name="roulette_wait">Ждём участников...</string>
+    <string name="roulette_to_film_list">Перейти к списку фильмов</string>
+    <string name="roulette_look">Смотрим!</string>
+    <string name="roulette_random_selection">Случайный выбор</string>
+    <string name="roulette_description_1"><b>Из всех совпадений выберем один фильм.</b>\nПосле выбора, сеанс завершится.</string>
+    <string name="roulette_description_2">Остальные участники подключатся автоматически.</string>
+    <string name="roulette_cancel">Отменить</string>
+
 </resources>

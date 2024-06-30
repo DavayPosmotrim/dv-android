@@ -11,6 +11,7 @@ import com.davay.android.databinding.FragmentLoadBinding
 import com.davay.android.di.ScreenComponent
 import com.davay.android.feature.load.di.DaggerLoadFragmentComponent
 import com.davay.android.feature.onboarding.presentation.OnboardingFragment
+import com.davay.android.feature.roulette.presentation.RouletteFragment
 
 class LoadFragment : BaseFragment<FragmentLoadBinding, LoadViewModel>(
     FragmentLoadBinding::inflate
@@ -36,14 +37,8 @@ class LoadFragment : BaseFragment<FragmentLoadBinding, LoadViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.button.setOnClickListener { _ ->
-            viewModel.navigate(R.id.action_loadFragment_to_mainFragment)
-        }
         binding.btnToMovieSelection.setOnClickListener {
             viewModel.navigate(R.id.action_loadFragment_to_selectMovieFragment)
-        }
-        binding.button2.setOnClickListener { _ ->
-            viewModel.navigate(R.id.action_loadFragment_to_registrationFragment)
         }
         binding.btnToOnboarding.setOnClickListener {
             val bundle = Bundle().apply {
@@ -51,15 +46,27 @@ class LoadFragment : BaseFragment<FragmentLoadBinding, LoadViewModel>(
             }
             viewModel.navigate(R.id.action_loadFragment_to_onboardingFragment, bundle)
         }
-
-        binding.btnToCoincidences.setOnClickListener {
-            viewModel.navigate(R.id.action_loadFragment_to_coincidencesFragment)
-        }
-
         binding.btnToSplash.setOnClickListener {
             viewModel.navigate(R.id.action_loadFragment_to_splashFragment)
         }
-
+        binding.button.setOnClickListener { _ ->
+            viewModel.navigate(R.id.action_loadFragment_to_mainFragment)
+        }
+        binding.button2.setOnClickListener { _ ->
+            viewModel.navigate(R.id.action_loadFragment_to_registrationFragment)
+        }
+        binding.btnToRoulette.setOnClickListener {
+            viewModel.navigate(R.id.action_loadFragment_to_rouletteFragment)
+        }
+        binding.btnToRoulette2.setOnClickListener {
+            val bundle = Bundle().apply {
+                putBoolean(RouletteFragment.ROULETTE_INITIATOR, true)
+            }
+            viewModel.navigate(R.id.action_loadFragment_to_rouletteFragment, bundle)
+        }
+        binding.btnToCoincidences.setOnClickListener {
+            viewModel.navigate(R.id.action_loadFragment_to_coincidencesFragment)
+        }
         binding.button3.setOnClickListener { _ ->
             viewModel.navigate(R.id.action_loadFragment_to_waitSessionFragment)
         }

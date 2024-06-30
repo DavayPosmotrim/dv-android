@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_base"
+    tools:context=".feature.roulette.presentation.RouletteFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.2" />
+
+        <com.davay.android.feature.roulette.presentation.carouselrecycler.NoTouchRecyclerView
+            android:id="@+id/recycler_view_roulette"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/gl_bottom"
+            app:layout_constraintTop_toBottomOf="@id/gl_top"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_swipeable_movie_card" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.8" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_sheet_waiting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_sheet_background"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_bs_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.2" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_bs_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.8" />
+
+        <TextView
+            android:id="@+id/tv_bottom_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:text="@string/roulette_wait"
+            android:textAppearance="@style/Text.Headline.SubTitle"
+            android:textColor="@color/text_headings"
+            app:layout_constraintBottom_toTopOf="@id/gl_bs_top"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_participants"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginBottom="@dimen/margin_32"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@id/gl_bs_bottom"
+            app:layout_constraintTop_toBottomOf="@id/gl_bs_top" />
+
+        <TextView
+            android:id="@+id/tv_bottom_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_16"
+            android:layout_marginBottom="@dimen/margin_32"
+            android:text="@string/roulette_magic"
+            android:textAppearance="@style/Text.Base.Medium.Regular"
+            android:textColor="@color/text_caption_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gl_bs_bottom" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_intro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_sheet_background"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/padding_16"
+        android:paddingTop="@dimen/padding_16"
+        android:paddingBottom="@dimen/padding_20"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/roulette_random_selection"
+            android:textAppearance="@style/Text.Headline.Title"
+            android:textColor="@color/text_headings" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_32"
+            android:text="@string/roulette_description_1"
+            android:textAppearance="@style/Text.Base.Medium.Regular"
+            android:textColor="@color/text_base" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16"
+            android:text="@string/roulette_description_2"
+            android:textAppearance="@style/Text.Base.Medium.Regular"
+            android:textColor="@color/text_base" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_continue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height_48"
+            android:layout_marginTop="@dimen/margin_32"
+            android:backgroundTint="@color/primary_base"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:text="@string/onboarding_begin"
+            android:textAppearance="@style/Text.Base.Button.Regular"
+            android:textColor="@color/text_light"
+            app:cornerRadius="@dimen/card_radius_12" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height_48"
+            android:layout_marginTop="@dimen/margin_16"
+            android:backgroundTint="@color/background_white"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:text="@string/roulette_cancel"
+            android:textAppearance="@style/Text.Base.Button.Bold"
+            android:textColor="@color/text_base"
+            android:textStyle="bold"
+            app:cornerRadius="@dimen/card_radius_12" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

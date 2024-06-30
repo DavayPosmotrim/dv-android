@@ -25,11 +25,13 @@ class MatchBottomSheetFragment : BottomSheetDialogFragment() {
 
     private val movieDetailsHelper: MovieDetailsHelper = MovieDetailsHelperImpl()
     private var movieDetails: MovieDetailsDemo? = null
+    private var buttonText: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             movieDetails =
                 Gson().fromJson(it.getString(ARG_MOVIE_DETAILS), MovieDetailsDemo::class.java)
+            buttonText = it.getString(ARG_BUTTON_TEXT)
         }
     }
 
@@ -72,6 +74,7 @@ class MatchBottomSheetFragment : BottomSheetDialogFragment() {
     private fun initViews() {
         buildBottomSheet()
         hideUnusedItems()
+        buttonText?.let { setButtonText(it) }
     }
 
     private fun subscribe() {
@@ -123,13 +126,22 @@ class MatchBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun setButtonText(text: String) {
+        binding.progressButtonItem.progressButton.text = text
+    }
+
     companion object {
         private const val ARG_MOVIE_DETAILS = "movie_details"
+        private const val ARG_BUTTON_TEXT = "button_text"
 
-        fun newInstance(movieDetails: String): MatchBottomSheetFragment {
+        fun newInstance(
+            movieDetails: String,
+            buttonText: String? = null
+        ): MatchBottomSheetFragment {
             val fragment = MatchBottomSheetFragment()
             val args = Bundle().apply {
                 putString(ARG_MOVIE_DETAILS, movieDetails)
+                if (buttonText != null) putString(ARG_BUTTON_TEXT, buttonText)
             }
             fragment.arguments = args
             return fragment

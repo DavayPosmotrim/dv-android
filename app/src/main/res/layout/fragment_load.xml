@@ -26,16 +26,6 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="To main fragment"
-        app:layout_constraintBottom_toTopOf="@id/button2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text" />
-
-    <Button
         android:id="@+id/btn_to_movie_selection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,18 +40,9 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/done"
         android:text="To onboarding fragment"
-        app:layout_constraintBottom_toTopOf="@id/button"
+        app:layout_constraintBottom_toTopOf="@id/btn_to_splash"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="To registration fragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button" />
 
     <Button
         android:id="@+id/btn_to_splash"
@@ -69,15 +50,54 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/done"
         android:text="To splash fragment"
+        app:layout_constraintBottom_toTopOf="@id/text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To main fragment"
+        app:layout_constraintBottom_toTopOf="@id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_to_onboarding" />
+        app:layout_constraintTop_toBottomOf="@id/text" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To registration fragment"
+        app:layout_constraintBottom_toTopOf="@id/btn_to_roulette"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button" />
+
+    <Button
+        android:id="@+id/btn_to_roulette"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To roulette fragment"
+        app:layout_constraintBottom_toTopOf="@id/btn_to_roulette2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button2" />
+
+    <Button
+        android:id="@+id/btn_to_roulette2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To roulette fragment 2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_to_roulette" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/button2"
+        app:layout_constraintTop_toBottomOf="@id/btn_to_roulette2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="To wait session fragment" />

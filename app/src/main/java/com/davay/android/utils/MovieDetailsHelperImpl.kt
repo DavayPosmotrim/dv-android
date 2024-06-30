@@ -69,9 +69,9 @@ open class MovieDetailsHelperImpl : MovieDetailsHelper {
                 if (countries.size > MAX_COUNTRY_NUMBER) {
                     str.append(MULTIPOINT)
                 }
+                str.append(DOT_DELIMETER)
             }
             movieLengthMin?.let {
-                str.append(DOT_DELIMETER)
                 str.append(movieLengthMin.formatMovieDuration(context))
             }
             return str.toString()
