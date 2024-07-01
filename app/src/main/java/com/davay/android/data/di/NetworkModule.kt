@@ -1,6 +1,7 @@
-package com.davay.android.network
+package com.davay.android.data.di
 
 import android.content.Context
+import com.davay.android.data.network.ApiConstants
 import com.davay.android.utils.ConnectionChecker
 import dagger.Module
 import dagger.Provides

@@ -32,8 +32,8 @@ class MovieCardAdapter(
             movieDetailsHelper.setImage(ivSelectMovieCover, data.posterUrl)
             movieDetailsHelper.addGenreList(fblGenreList, data.genres)
             movieDetailsHelper.setRateText(tvMarkValue, data.ratingKinopoisk)
-            tvFilmTitle.text = data.movieName
-            tvOriginalTitle.text = data.alternativeName ?: data.englishName ?: ""
+            tvFilmTitle.text = data.name
+            tvOriginalTitle.text = data.alternativeName ?: ""
             tvYearCountryRuntime.text = movieDetailsHelper.buildStringYearCountriesRuntime(
                 data,
                 binding.root.context

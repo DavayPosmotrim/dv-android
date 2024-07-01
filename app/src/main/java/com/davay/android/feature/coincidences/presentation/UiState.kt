@@ -1,6 +1,6 @@
 package com.davay.android.feature.coincidences.presentation
 
-import com.davay.android.feature.coincidences.ErrorType
+import com.davay.android.domain.models.ErrorType
 import com.davay.android.feature.selectmovie.domain.models.MovieDetailsDemo
 
 sealed class UiState {

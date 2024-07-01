@@ -17,4 +17,14 @@
     <string name="dialog_yes">ДА</string>
     <string name="dialog_no">НЕТ</string>
 
+    <string name="error_message_no_internet_title">Нет соединения с интернетом</string>
+    <string name="error_message_no_internet_description">Интернет не бом-бом,\nпроверьте соединение</string>
+    <string name="error_message_no_internet_button_text">Повторное подключение</string>
+    <string name="error_message_no_access_service_title">Сервис временно недоступен</string>
+    <string name="error_message_no_access_service_description">Дождитесь, пока мы сделаем магию.\nВжух!</string>
+    <string name="error_message_old_version_title">Версия приложения устарела</string>
+    <string name="error_message_old_version_description">Сначала сломали, потом починили.\nСкачайте обновлённую версию.</string>
+    <string name="error_message_old_version_button_text">Перейти в магазин</string>
+    <string name="error_message_no_internet_image_description">Изображение нет соединения с интернетом</string>
+
 </resources>

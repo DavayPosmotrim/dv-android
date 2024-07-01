@@ -1,0 +1,17 @@
+package com.davay.android.domain.models
+
+enum class ErrorType {
+    NO_CONNECTION,
+    NOT_FOUND,
+    BAD_REQUEST,
+    UNAUTHORIZED,
+    FORBIDDEN,
+    CONFLICT,
+    UNEXPECTED,
+    UNPROCESSABLE_ENTITY,
+    INTERNAL_SERVER_ERROR,
+    BAD_GATEWAY,
+    CAPTCHA_REQUIRED,
+    OLD_APPLICATION_VERSION,
+    UNKNOWN_ERROR
+}

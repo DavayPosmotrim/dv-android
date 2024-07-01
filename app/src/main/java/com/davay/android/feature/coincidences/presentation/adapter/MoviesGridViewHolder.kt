@@ -9,7 +9,7 @@ class MoviesGridViewHolder(private val view: MovieCardView) : RecyclerView.ViewH
 
     fun bind(movie: MovieDetailsDemo) = with(view) {
         setMovieCover(movie.posterUrl ?: "")
-        setMovieTitle(movie.movieName)
+        setMovieTitle(movie.name)
     }
 
     companion object {

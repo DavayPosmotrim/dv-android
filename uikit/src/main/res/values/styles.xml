@@ -96,6 +96,11 @@
         <item name="fontWeight">400</item>
     </style>
 
+    <style name="Text.Base.Big.Regular.ErrorTitle">
+        <item name="android:lineSpacingExtra">0sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Text.Base.Small.Regular.NoLineSpacing">
         <item name="android:lineSpacingExtra">0sp</item>
     </style>

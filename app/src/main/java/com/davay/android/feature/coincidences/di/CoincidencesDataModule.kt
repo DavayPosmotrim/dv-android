@@ -1,7 +1,7 @@
 package com.davay.android.feature.coincidences.di
 
 import com.davay.android.base.usecases.GetData
-import com.davay.android.feature.coincidences.ErrorType
+import com.davay.android.domain.models.ErrorType
 import com.davay.android.feature.coincidences.data.TestMovieRepository
 import com.davay.android.feature.selectmovie.domain.models.MovieDetailsDemo
 import com.davay.android.utils.ConnectionChecker

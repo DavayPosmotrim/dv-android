@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_error_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/error_message_no_internet_image_description"
+        tools:src="@drawable/ic_error_no_network_200" />
+
+    <TextView
+        android:id="@+id/tv_error_title"
+        style="@style/Text.Base.Big.Regular.ErrorTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_12"
+        tools:text="@string/error_message_no_internet_title" />
+
+    <TextView
+        android:id="@+id/tv_error_description"
+        style="@style/Text.Base.Medium.NoLineSpacing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_12"
+        tools:text="@string/error_message_no_internet_description" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mbtn_error_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_48"
+        android:layout_marginHorizontal="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_32"
+        android:backgroundTint="@color/primary_base"
+        android:textAllCaps="true"
+        android:textAppearance="@style/Text.Base.Button"
+        android:textColor="@color/text_light"
+        app:cornerRadius="@dimen/card_radius_12"
+        tools:text="@string/error_message_no_internet_button_text" />
+</LinearLayout>

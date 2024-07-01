@@ -1,7 +1,7 @@
 package com.davay.android.feature.coincidences.data
 
 import com.davay.android.base.usecases.GetData
-import com.davay.android.feature.coincidences.ErrorType
+import com.davay.android.domain.models.ErrorType
 import com.davay.android.feature.selectmovie.domain.models.MovieDetailsDemo
 import com.davay.android.utils.ConnectionChecker
 import com.davay.android.utils.Result
@@ -14,7 +14,7 @@ class TestMovieRepository(
         if (connectionChecker.isConnected) {
             Result.Success(mockTestMovieList)
         } else {
-            Result.Error(ErrorType.NO_INTERNET)
+            Result.Error(ErrorType.NO_CONNECTION)
         }
 
     companion object {
@@ -38,7 +38,7 @@ class TestMovieRepository(
         private val mockTestMovieList = List(10) {
             MovieDetailsDemo(
                 kinopoiskId = it,
-                movieName = films[it % 5].first,
+                name = films[it % 5].first,
                 posterUrl = films[it % 5].second
             )
         }

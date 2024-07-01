@@ -206,11 +206,9 @@ class SelectMovieFragment :
 private val mockMovies = listOf(
     MovieDetailsDemo(
         kinopoiskId = 12345,
-        imdbId = 67890,
-        movieName = "Интерстеллар",
+        name = "Интерстеллар",
         alternativeName = "Interstellar",
         posterUrl = "https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/7ae40b66-ebda-4570-8676-980344d81bc1/3840x",
-        englishName = "Interstellar",
         year = 2014,
         description = "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей и учёных отправляется сквозь червоточину (которая предположительно соединяет области пространства-времени через большое расстояние) в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планету с подходящими для человечества условиями.",
         shortDescription = "Эпическое путешествие через галактику.",
@@ -225,11 +223,9 @@ private val mockMovies = listOf(
         directors = listOf("Кристофер Нолан")
     ), MovieDetailsDemo(
         kinopoiskId = 23456,
-        imdbId = 78901,
-        movieName = "Тёмный рыцарь",
+        name = "Тёмный рыцарь",
         posterUrl = "https://kinopoisk-ru.clstorage.net/30H4PS317/fc80630l6W4j/PCNvS_zGy0YMHp7no0AsGkQRD5F3GbGxVVkAfX4LQFrQ2bnuw6YEelehkDaD0ct6S5LEFcsAhqMFiXQJwV2qBmgDGrrdc46T6NorlwYFCJ6RcXtAE5yF8IRsBZiM-ELZ8k6bjTEkBrxDxbTX9mR-Hk-SVJGrlALXUqrFWuOaftAMACwryuRb55hPn2RQI3881LF8VVVJModFOsL-vWiyOGEOGexB9RSdkHY10iYmjX5vsIUCeWGTlCLLc5lj-jxzbAJMCDrFKIYITY200TA9PAVjD5VnKUDnBPjBv-9rYBuQ7wpOAUZGnZM1ZxJEVB6cbhJXMvgSQ2VCeVBo4bmfke9wTQoqNKs1690sBkJT_TyWsT2GlgiQByfLYE8923HqQF47HUNl5JxD9UdgdAfvvC7hlCIbE2PGYynw21I47zHu4O85yuVJtQot_DVxMg6c5fF8xRYJ0ceUS8Le7zsSScAdW98xpAbeIvZ3MldUbO89wjbR2gIAdvILQylzWW7DXTNuWuhVGmV4jF-kI5K9jzbAL9ek6GF1tzqzzM-LABjzLdk9kMZVjPJGtLGk9bwd7TE00ClCcJbQWbB5ghkPs30APJh5t0pFeN8-lXHQTX2mAx_nxysQ1XW60gytqVLYge8KHjCWVD3zNBVxlfR_vGwhtRIbg2EkoEuyOWBJjZMe8bz6CES59apcf4XxIs1cx2MddoRakLfUqXI93mly66MNCV4xB3TMc4VU0beUHJ-t0cbyGHJD5XBpIalRSZ8jPCB8q2qU-oV7r2wGIfJNfQaAbLSW-IPElUqDzS374UlDLTlNkPc1v7PlZNAk5Cx97hBUggowwcZhCaH5wdsuAG0gLop7Fwl2SX1-JcOTHz704Tx09yhh15R7cA-fuXIIoX3rzjHndkyQxaSRtHdujF7jJMGrQMGHYkthuPO7DhON4C4ZmoTJ95rdbCTTUsyetqM8VoYIYqe1qMHMnDviGPPPW-yxxhet0GWEwfZ2f9z8UYSCKKPi9SEoEAuQuNziTaO-GniWegVp_0x3YZFdb8WCPifkWbPFVZsCfc_LIWsiz_sMQBUkrmKnlpKElL3vzGJWkltw8QSCaXMIkjptMD7CTTmbtboXqr_v5wAyDJ2m4-7F1vqDxTWawx6veTI7sg4ZXlKUJGyTJHVxVKeubu3SVkLL0ZJmovuSKFPJX6P9k-9KSmTopFpMfEYgYz8s1XGsZ1d5YpcUatJvPjlx27H8WywDpJbPwaeVcyYFzZ7-YkQwWcLwZDGKMBsTmA8x_QFtKfl0qbfJnGylokK9LcRBH0WXidA21Wiyr_47AvuAPlteAicWnrBX5DJ1dq_fHDHEwklwY5dAegAIQTkuwVxAPlmrJCqF2d1OdQKSvywV4MyGtuhwRoTqgT79-iFJIt747XMVRp0yVodDZ-SeLkxQdWCpADGlA_khukNYT6MNkE8YO0ZJpBoPL6YRos9thWLdR6bpk2V0icH_Djjzq0AcOx8SNgT-EaXnM-f0zmxuIiZyaqBDNqO6UGkDm01j7iAcWeqk65cI3p3n8KIdP-SB3KQnifOl1MjQz_6ZoEsQvvm9QCdmjFH1lDKGdq4-rOJEQOoC0QeSGZD7IIruMGwyDVrptSnmSFyOVuKS7c71gNzGBdmx9dUbos_t-iJLQ14JP0P1NPxgF5VStKStzv4zNyKLY0NEEepAGOPJPDOOMd6LqPSIRZt97WWwYf0_9IAftKeKgtcVWJJcrVsCa5APOb1gN-b9sBZ18CQlnn7MckQyiLNgZWIqEhsQiS3B_BFOKts1GYUp3e50ImFvXtXi3YWnqsPktnjiLN1oMGuhDQkPEUfXb4D0pbE2N3w-z5LWEGoywVeBq1D64wmMAQ3w38pJNthkap_cZEJDbb0kwWz0pusghQbJ4i9ciwG5Y27Kb3DF5v4DtJVQNkQMHAzyNFJIM5NHI9oASvM7D5HPAz7Y6JZbNmp-LqfjYoyeRrPuBUZJs2f2isL8L_qQWKKNq_wjpNT8wTfXQ2WEDIxOcwZS60CxN3JrEHmAaGxgTnI82-ikCVaojj53oFKdfyQwXFalyPDntHowj_854plSnkvcI9fmvtJFVsIEl8x-7wPm46uBYZQQO6Ga8Uk-UVxRv-n4lgommg3ct4JhTT5lYy53V6ihtKX6oAz_iNAr800oD3Fk9v4iFmfyZdaenpwSdRCocALVkinh2KNaTMO8cQ4JWKY7FXleDpUwkC88JDEMBIbLctQlGQDNLfsQOKDs6c0AhpWu8EW10-d1T55OgddQucABFhOL0Dtzea1hjdAc6mpGi7a77z7H48INXpYA_gd1mpLG5ngwfP4q8huynmlewhQXHoIlRfKFt71t3dDWoOqw0reC-iH7gistwi3xHvlptFtVeE_MlhPCXv6Xk-4H9akyd5RLMY8MGoC78O-YHkK0Vm6RlFfQRJY9n46CZBLIovOmsiozGuAIHwANcw0ritbqRpgfLmfiUj38NWGeh6UZ0-Wk2yG_b8tBWmPtCQ9zNsS-0qZFk_dHbF4MIEZAGiDSVJA4c3rAOh9iH8Bf-AhmKxf5Xy1Xk8I__uVjfGclq8Lltalj3e46MpjyrhmewKZGvyOnpeJUV86Pz9C0QKtgoKbwCAOJIShOE_5TXNhpdPvmaWxMpWABPf2GA6yGlMmBtIapoEy_ihD443xaP1EHF3wzFNVQJKTcrz6B1iL6YMPWg2vCGTIqXmM_sc97iabpdpjP_efyEB6cN5Pe59f68hWlWwB_vdoiW5DfeBxSp0ZNAnSU4ZZ0H14tw-SCq6NCtFFqQviRSV5xr8ENKphESYZpbI1mQmHvTEYhzObFyqGndVuCHRw6o6nCfDovYBS0HJGGV4PH9oyeLsDU4bvzg1UTSnIY47jf451R_upI1um3eFwuhhESPw-V0CxFRSsg1RebUr9uatOIww3pbYClVlzyZgWBdiWdji8zl2GachHWs",
         alternativeName = "The Dark Knight",
-        englishName = "The Dark Knight",
         year = 2008,
         description = "Бэтмен поднимает ставки в войне с криминалом. С помощью лейтенанта Джима Гордона и прокурора Харви Дента он намерен очистить улицы Готэма от преступности. Сотрудничество оказывается эффективным, но скоро они обнаружат себя посреди хаоса, развязанного восходящим криминальным гением, известным напуганным горожанам под именем Джокер.",
         shortDescription = "Бэтмен против Джокера.",
@@ -244,10 +240,8 @@ private val mockMovies = listOf(
         directors = listOf("Кристофер Нолан")
     ), MovieDetailsDemo(
         kinopoiskId = 34567,
-        imdbId = 89012,
-        movieName = "Властелин колец: Возвращение короля",
+        name = "Властелин колец: Возвращение короля",
         alternativeName = "The Lord of the Rings: The Return of the King",
-        englishName = "The Lord of the Rings: The Return of the King",
         year = 2003,
         description = "Заключительная часть эпической трилогии.",
         shortDescription = "Финал эпической трилогии.",
@@ -262,11 +256,9 @@ private val mockMovies = listOf(
         directors = listOf("Питер Джексон", "Кристофер Нолан")
     ), MovieDetailsDemo(
         kinopoiskId = 3457,
-        imdbId = 8912,
         posterUrl = "https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/cb430f00-1734-4078-abd2-6688a94749a5/3840x",
-        movieName = "Доктор Стрейнджлав, или Как я научился не волноваться и полюбил атомную бомбу",
+        name = "Доктор Стрейнджлав, или Как я научился не волноваться и полюбил атомную бомбу",
         alternativeName = "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
-        englishName = "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
         year = 1963,
         description = "Одержимый мыслью, что коммунисты намереваются украсть у американцев их «бесценные телесные соки», командир военно-воздушной базы генерал Джек Д. Риппер посылает эскадрилью бомбардировщиков с ядерным оружием бомбить СССР. Президент США Маффли пытается спасти положение — он собирает своих советников, включая доблестного генерала Тергидсона и прикованного к инвалидной коляске бывшего нацистского ученого доктора Стрейнджлава.",
         ratingKinopoisk = 6.7f,

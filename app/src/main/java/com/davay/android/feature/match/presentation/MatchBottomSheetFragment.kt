@@ -115,8 +115,8 @@ class MatchBottomSheetFragment : BottomSheetDialogFragment() {
         binding.matchMovieCard.apply {
             movieDetailsHelper.setImage(ivSelectMovieCover, data.posterUrl)
             movieDetailsHelper.addGenreList(fblGenreList, data.genres)
-            tvFilmTitle.text = data.movieName
-            tvOriginalTitle.text = data.alternativeName ?: data.englishName ?: ""
+            tvFilmTitle.text = data.name
+            tvOriginalTitle.text = data.alternativeName ?: ""
             tvYearCountryRuntime.text =
                 movieDetailsHelper.buildStringYearCountriesRuntime(data, requireContext())
             movieDetailsHelper.setRateText(tvMarkValue, data.ratingKinopoisk)
