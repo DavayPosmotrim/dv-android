@@ -43,7 +43,7 @@ class OnboardingDataProvider {
                 R.string.onboarding_instructions_session_finishing
             ),
             intArrayOf(
-                R.id.action_onboardingFragment_to_mainFragment
+                R.id.action_onboardingFragment_to_selectMovieFragment
             ) // После влива фрагмента выбора заменить action id
         )
 }

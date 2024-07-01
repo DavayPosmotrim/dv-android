@@ -6,7 +6,7 @@ import dagger.Component
 
 @Component(
     dependencies = [AppComponent::class],
-    modules = [SplashFragmentModule::class]
+    modules = [SplashFragmentModule::class, SplashDataModule::class]
 )
 interface SplashFragmentComponent : ScreenComponent {
 

@@ -20,6 +20,7 @@ import com.davay.android.app.AppComponentHolder
 import com.davay.android.base.BaseFragment
 import com.davay.android.databinding.FragmentWaitSessionBinding
 import com.davay.android.di.ScreenComponent
+import com.davay.android.feature.onboarding.presentation.OnboardingFragment
 import com.davay.android.feature.waitsession.di.DaggerWaitSessionFragmentComponent
 import com.davay.android.feature.waitsession.presentation.adapter.CustomItemDecorator
 import com.davay.android.feature.waitsession.presentation.adapter.UserAdapter
@@ -156,6 +157,17 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
     private fun setButtonClickListeners() {
         binding.cancelButton.setOnClickListener {
             dialog?.show(parentFragmentManager, CUSTOM_DIALOG_TAG)
+        }
+        binding.startSessionButton.setOnClickListener {
+            if (viewModel.getIsNotFirstTime()) {
+                viewModel.navigate(R.id.action_waitSessionFragment_to_selectMovieFragment)
+            } else {
+                viewModel.setIsNotFirstTime(true)
+                val bundle = Bundle().apply {
+                    putInt(OnboardingFragment.ONBOARDING_KEY, OnboardingFragment.ONBOARDING_INSTRUCTION_SET)
+                }
+                viewModel.navigate(R.id.action_waitSessionFragment_to_onboardingFragment, bundle)
+            }
         }
     }
 

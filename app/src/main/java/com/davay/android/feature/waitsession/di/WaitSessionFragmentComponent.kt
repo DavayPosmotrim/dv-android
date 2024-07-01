@@ -6,7 +6,7 @@ import dagger.Component
 
 @Component(
     dependencies = [AppComponent::class],
-    modules = [WaitSessionFragmentModule::class]
+    modules = [WaitSessionFragmentModule::class, WaitSessionDataModule::class]
 )
 interface WaitSessionFragmentComponent : ScreenComponent {
 
