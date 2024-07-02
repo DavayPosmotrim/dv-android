@@ -49,9 +49,6 @@ class SessionListFragment : BaseFragment<FragmentSessionListBinding, SessionList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
-        subscribe()
-
         dialog = MainDialogFragment.newInstance(
             title = getString(R.string.leave_session_title),
             message = getString(R.string.leave_session_dialog_message),
@@ -61,7 +58,7 @@ class SessionListFragment : BaseFragment<FragmentSessionListBinding, SessionList
         )
     }
 
-    private fun initViews() {
+    override fun initViews() {
         setupToolbar()
         initRecycler()
 
@@ -69,7 +66,7 @@ class SessionListFragment : BaseFragment<FragmentSessionListBinding, SessionList
         binding.toolbar.addStatusBarSpacer()
     }
 
-    private fun subscribe() {
+    override fun subscribe() {
         setButtonClickListeners()
     }
 

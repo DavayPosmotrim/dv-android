@@ -112,4 +112,7 @@
     <string name="coincidences_screen_coincidences">Совпадения</string>
     <string name="coincidences_screen_empty_coincidences">Пока ничего нет</string>
 
+    <!--  matched sessions  -->
+    <string name="matched_sessions_empty_list_error">Здесь будут фильмы,\nкоторые вам понравились</string>
+
 </resources>

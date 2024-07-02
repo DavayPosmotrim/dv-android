@@ -50,7 +50,9 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViews()
         observeNavigation()
+        subscribe()
     }
 
     private fun observeNavigation() {
@@ -67,4 +69,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel>(
             is NavigationCommand.Back -> findNavController().navigateUp()
         }
     }
+
+    protected open fun initViews() = Unit
+
+    protected open fun subscribe() = Unit
 }

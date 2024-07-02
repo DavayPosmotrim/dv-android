@@ -44,10 +44,9 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding, OnboardingVie
         super.onViewCreated(view, savedInstanceState)
         setUpViewPager()
         setUpButtonClickListener()
-        initViews()
     }
 
-    private fun initViews() = with(binding) {
+    override fun initViews() = with(binding) {
         fragmentList.addAll(
             listOf(
                 OnboardingFirstFragment(arrayOfIds[0]),
