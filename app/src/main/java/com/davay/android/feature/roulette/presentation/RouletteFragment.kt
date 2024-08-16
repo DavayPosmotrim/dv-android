@@ -67,12 +67,6 @@ class RouletteFragment :
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (viewModel.state.value is RouletteState.Match) {
-            handleMatchState(viewModel.state.value as RouletteState.Match)
-        }
-    }
 
     override fun onDestroyView() {
         binding.recyclerViewRoulette.clearOnScrollListeners()
