@@ -30,5 +30,6 @@
     <string name="error_message_old_version_description">Сначала сломали, потом починили.\nСкачайте обновлённую версию.</string>
     <string name="error_message_old_version_button_text">Перейти в магазин</string>
     <string name="error_message_no_internet_image_description">Изображение нет соединения с интернетом</string>
+    <string name="empty_text"></string>
 
 </resources>

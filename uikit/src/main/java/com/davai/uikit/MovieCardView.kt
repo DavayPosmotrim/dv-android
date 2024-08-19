@@ -65,7 +65,6 @@ class MovieCardView @JvmOverloads constructor(
                 transformations(RoundedCornersTransformation())
                     .crossfade(true)
             }
-            tvMovieTitle.isGone = true
         } else {
             ivMovieCover.load(url) {
                 listener(

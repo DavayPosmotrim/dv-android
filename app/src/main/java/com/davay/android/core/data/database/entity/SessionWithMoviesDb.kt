@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
-data class SessionWithMovies(
+data class SessionWithMoviesDb(
     @Embedded val session: SessionEntity,
     @Relation(
         parentColumn = "session_id",

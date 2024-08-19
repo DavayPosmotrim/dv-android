@@ -1,14 +1,12 @@
 package com.davay.android.feature.sessionsmatched.presentation
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.davai.extensions.dpToPx
 import com.davay.android.R
 import com.davay.android.base.BaseFragment
-import com.davay.android.core.domain.models.ErrorType
 import com.davay.android.core.domain.models.Session
 import com.davay.android.databinding.FragmentMatchedSessionListBinding
 import com.davay.android.di.AppComponentHolder
@@ -60,7 +58,6 @@ class MatchedSessionListFragment :
         when (state) {
             is MatchedSessionsState.Empty -> showEmpty()
             is MatchedSessionsState.Loading -> showLoading()
-            is MatchedSessionsState.Error -> showError(state.errorType)
             is MatchedSessionsState.Content -> showContent(state.sessionsList)
         }
     }
@@ -68,10 +65,6 @@ class MatchedSessionListFragment :
     private fun showContent(sessions: List<Session>) {
         binding.rvSessionList.isVisible = true
         sessionsAdapter.setData(sessions)
-    }
-
-    private fun showError(errorType: ErrorType) {
-        Toast.makeText(requireContext(), errorType.toString(), Toast.LENGTH_SHORT).show()
     }
 
     private fun showEmpty() = with(binding) {

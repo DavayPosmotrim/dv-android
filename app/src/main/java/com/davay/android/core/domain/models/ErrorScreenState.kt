@@ -20,7 +20,7 @@ enum class ErrorScreenState(
     ),
     EMPTY(
         com.davai.uikit.R.string.error_message_empty_title,
-        -1,
+        com.davai.uikit.R.string.empty_text,
         com.davai.uikit.R.drawable.placeholder_empty,
         null
     ),

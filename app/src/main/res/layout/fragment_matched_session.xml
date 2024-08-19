@@ -83,23 +83,11 @@
                 tools:itemCount="2"
                 tools:listitem="@layout/movie_card_view" />
 
-            <include
-                android:id="@+id/empty_placeholder"
-                layout="@layout/item_empty_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@id/coincidences_container"
-                app:layout_constraintTop_toTopOf="@id/coincidences_container" />
-
-            <include
+            <com.davai.uikit.ErrorScreenView
                 android:id="@+id/error_message"
-                layout="@layout/layout_error_message"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@id/coincidences_container"
-                app:layout_constraintTop_toTopOf="@id/coincidences_container" />
+                android:layout_height="match_parent"
+                android:visibility="visible" />
 
             <com.davai.uikit.ProgressBarView
                 android:id="@+id/progress_bar"
