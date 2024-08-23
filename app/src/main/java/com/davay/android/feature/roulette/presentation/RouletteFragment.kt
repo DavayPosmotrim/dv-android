@@ -62,6 +62,8 @@ class RouletteFragment :
         }
         if (viewModel.state.value !is RouletteState.Match && viewModel.state.value !is RouletteState.Error) {
             handleStartFragment()
+        } else if (viewModel.state.value is RouletteState.Match) {
+               parentFragmentManager.restoreBackStack(TAG_MATCH)
         } else {
             bottomSheetBehaviorIntro.state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -191,7 +193,8 @@ class RouletteFragment :
             buttonText = getString(R.string.roulette_to_film_list),
             showDismisAnimation = false
         )
-        matchBottomSheetFragment.show(parentFragmentManager, matchBottomSheetFragment.tag)
+
+        matchBottomSheetFragment.show(parentFragmentManager, TAG_MATCH)
     }
 
     private fun handleRouletteState(state: RouletteState.Roulette) {
@@ -238,5 +241,6 @@ class RouletteFragment :
         private const val DELAY_TIME_MS_1000 = 1000L
         private const val ROULETTE_SCROLL_COEFFICIENT = 4
         const val ROULETTE_INITIATOR = "ROULETTE_INITIATOR"
+        const val TAG_MATCH = "TAG_MATCH"
     }
 }
