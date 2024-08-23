@@ -63,7 +63,7 @@ class RouletteFragment :
         if (viewModel.state.value !is RouletteState.Match && viewModel.state.value !is RouletteState.Error) {
             handleStartFragment()
         } else if (viewModel.state.value is RouletteState.Match) {
-               parentFragmentManager.restoreBackStack(TAG_MATCH)
+            parentFragmentManager.restoreBackStack(TAG_MATCH)
         } else {
             bottomSheetBehaviorIntro.state = BottomSheetBehavior.STATE_HIDDEN
         }
