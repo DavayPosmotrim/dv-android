@@ -93,15 +93,16 @@ class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, Coinciden
      * Показывает подсказку, если она еще не показана
      */
     private fun showHint() {
-        if (viewModel.isHintShown()) {
+        if (viewModel.isFirstTimeLaunch()) {
+            showBottomSheetDialogFragment()
+            viewModel.markFirstTimeLaunch()
+        } else {
             val existingFragment = parentFragmentManager.findFragmentByTag(
                 RouletteBottomSheetDialogFragment::class.java.simpleName
             )
             if (existingFragment is RouletteBottomSheetDialogFragment) {
                 rouletteBottomSheetDialogFragment = existingFragment
             }
-        } else {
-            showBottomSheetDialogFragment()
         }
 
         parentFragmentManager.registerFragmentLifecycleCallbacks(
