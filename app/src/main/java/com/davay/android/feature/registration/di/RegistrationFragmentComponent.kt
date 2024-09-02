@@ -6,7 +6,11 @@ import dagger.Component
 
 @Component(
     dependencies = [AppComponent::class],
-    modules = [RegistrationFragmentModule::class, RegistrationDataModule::class]
+    modules = [
+        RegistrationFragmentModule::class,
+        RegistrationDataModule::class,
+        RegistrationUseCaseModule::class
+    ]
 )
 interface RegistrationFragmentComponent : ScreenComponent {
 

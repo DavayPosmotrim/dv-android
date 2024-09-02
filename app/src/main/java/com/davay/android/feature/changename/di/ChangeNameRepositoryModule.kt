@@ -1,4 +1,4 @@
-package com.davay.android.feature.registration.di
+package com.davay.android.feature.changename.di
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -17,7 +17,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.statement.HttpResponse
 
 @Module
-class RegistrationDataModule {
+class ChangeNameRepositoryModule {
     @Provides
     fun provideUserDataKtorNetworkClient(
         context: Context,

@@ -3,12 +3,16 @@
     <string name="main_fragment_text">Забудьте о бесконечных спорах и компромиссах\n
         <font color="#FF8B55FF">Наслаждайтесь моментами</font>, выбрав вместе\n
         идеальный фильм</string>
+    <string name="empty_string"></string>
     <string name="registration_enter_your_name">Введите ваше имя</string>
     <string name="registration_enter">Войти</string>
     <string name="registration_enter_name">Введите имя</string>
     <string name="registration_two_letters_minimum">Минимум две буквы</string>
     <string name="registration_just_letters">Только буквы</string>
     <string name="registration_not_more_letters">Не более 16 символов</string>
+    <string name="registration_error_no_connection">Проверьте ваше подключение к Интернету</string>
+    <string name="registration_error_server_error">Что-то пошло не так, попробуйте позже</string>
+    <string name="registration_error_update_app">Пожалуйста, обновите приложение</string>
 
     <!--change name screen-->
     <string name="change_name_enter">Сохранить</string>

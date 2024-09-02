@@ -5,10 +5,12 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.davay.android.R
 import com.davay.android.base.BaseFragment
+import com.davay.android.core.domain.models.UserNameState
 import com.davay.android.core.presentation.MainActivity
 import com.davay.android.databinding.FragmentRegistrationBinding
 import com.davay.android.di.AppComponentHolder
@@ -72,34 +74,27 @@ class RegistrationFragment :
         }
     }
 
-    private fun stateHandle(state: RegistrationState?) {
-        binding.tvErrorHint.text = when (state) {
-            RegistrationState.FIELD_EMPTY -> resources.getString(R.string.registration_enter_name)
-            RegistrationState.MINIMUM_LETTERS -> resources.getString(R.string.registration_two_letters_minimum)
-            RegistrationState.NUMBERS -> resources.getString(R.string.registration_just_letters)
-            RegistrationState.SUCCESS, RegistrationState.DEFAULT, null -> ""
-            RegistrationState.MAXIMUM_LETTERS -> resources.getString(R.string.registration_not_more_letters)
+    private fun stateHandle(state: UserNameState?) = with(binding) {
+        val isLoading = state == UserNameState.LOADING
+        progressBar.isVisible = isLoading
+        etName.isEnabled = isLoading.not()
+        tvErrorHint.text = state?.getMessage(requireContext()) ?: ""
+        if (state == UserNameState.SUCCESS) {
+            viewModel.navigate(R.id.action_registrationFragment_to_mainFragment)
         }
     }
 
     private fun setButtonClickListeners() {
         binding.btnEnter.setOnClickListener {
-            buttonClicked()
+            viewModel.buttonClicked(binding.etName.text)
         }
         binding.etName.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                buttonClicked()
+                viewModel.buttonClicked(binding.etName.text)
                 true
             } else {
                 false
             }
-        }
-    }
-
-    private fun buttonClicked() {
-        viewModel.buttonClicked(binding.etName.text)
-        if (viewModel.state.value == RegistrationState.SUCCESS) {
-            viewModel.navigate(R.id.action_registrationFragment_to_mainFragment)
         }
     }
 

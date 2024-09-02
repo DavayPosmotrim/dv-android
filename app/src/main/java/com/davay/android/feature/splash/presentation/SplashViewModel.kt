@@ -18,7 +18,7 @@ class SplashViewModel @Inject constructor(
         splashOnBoardingInteractror.markFirstTimeLaunch()
     }
 
-    fun isUserRegistered(): Boolean {
-        return getUserData.getUserData(UserDataFields.UserId()).isNotEmpty()
+    fun isNotRegistered(): Boolean {
+        return getUserData.getUserData(UserDataFields.UserName()).isNullOrEmpty()
     }
 }

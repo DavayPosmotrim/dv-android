@@ -4,10 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.davay.android.core.data.impl.UserDataRepositoryImpl
 import com.davay.android.core.domain.api.UserDataRepository
-import com.davay.android.core.domain.impl.GetUserDataUseCaseImpl
 import com.davay.android.core.domain.lounchcontrol.api.FirstTimeFlagRepository
 import com.davay.android.core.domain.lounchcontrol.api.FirstTimeFlagStorage
-import com.davay.android.core.domain.usecases.GetUserDataUseCase
 import com.davay.android.di.prefs.marker.StorageMarker
 import com.davay.android.di.prefs.model.PreferencesStorage
 import com.davay.android.feature.splash.data.SplashOnBoardingRepositoryImpl
@@ -45,9 +43,4 @@ class SplashDataModule {
         @StorageMarker(PreferencesStorage.USER)
         storage: SharedPreferences
     ): UserDataRepository = UserDataRepositoryImpl(storage)
-
-    @Provides
-    fun provideGetUserDataUseCase(
-        repository: UserDataRepository
-    ): GetUserDataUseCase = GetUserDataUseCaseImpl(repository)
 }

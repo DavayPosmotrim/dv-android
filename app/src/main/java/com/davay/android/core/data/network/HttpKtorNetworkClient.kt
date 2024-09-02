@@ -2,7 +2,7 @@ package com.davay.android.core.data.network
 
 import android.content.Context
 import android.util.Log
-import com.commit451.translationviewdraghelper.BuildConfig
+import com.davay.android.BuildConfig
 import com.davay.android.core.data.network.model.Response
 import com.davay.android.core.data.network.model.StatusCode
 import com.davay.android.extensions.isInternetReachable

@@ -54,6 +54,17 @@
         app:layout_constraintVertical_bias="0.8"
         tools:text="[Артем]" />
 
+    <com.davai.uikit.ProgressBarView
+        android:id="@+id/progress_bar"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="@dimen/dimen_80"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_name"
+        android:visibility="visible" />
+
     <TextView
         android:id="@+id/tv_error_hint"
         style="@style/Text.Base.Small.Regular"

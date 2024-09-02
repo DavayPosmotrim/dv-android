@@ -38,8 +38,8 @@ fun MovieDto.toDomain() = Movie(
 )
 
 fun UserDto.toDomain() = User(
-    userId,
-    name
+    userId = userId,
+    name = name
 )
 
 fun MovieDetailsDto.toDomain() = MovieDetails(

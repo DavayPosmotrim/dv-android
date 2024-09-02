@@ -1,7 +1,7 @@
 package com.davay.android.core.data.di
 
 import android.util.Log
-import com.commit451.translationviewdraghelper.BuildConfig
+import com.davay.android.BuildConfig
 import dagger.Module
 import dagger.Provides
 import io.ktor.client.HttpClient

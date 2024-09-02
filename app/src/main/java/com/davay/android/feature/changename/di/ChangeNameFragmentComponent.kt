@@ -6,7 +6,11 @@ import dagger.Component
 
 @Component(
     dependencies = [AppComponent::class],
-    modules = [ChangeNameFragmentModule::class, ChangeNameDataModule::class]
+    modules = [
+        ChangeNameFragmentModule::class,
+        ChangeNameRepositoryModule::class,
+        ChangeNameUseCaseModule::class
+    ]
 )
 interface ChangeNameFragmentComponent : ScreenComponent {
 

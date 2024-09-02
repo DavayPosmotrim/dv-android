@@ -43,18 +43,11 @@ class SplashFragment :
         lifecycleScope.launch {
             addTextViewsWithDelay()
             delay(DELAY_4000_MS)
-            when (viewModel.isFirstTimeLaunch()) {
-                true -> {
-                    viewModel.markFirstTimeLaunch()
-                    viewModel.navigate(R.id.action_splashFragment_to_onboardingFragment, bundle)
-                }
-                false -> {
-                    if (viewModel.isUserRegistered()) {
-                        viewModel.navigate(R.id.action_splashFragment_to_mainFragment)
-                    } else {
-                        viewModel.navigate(R.id.action_splashFragment_to_registrationFragment)
-                    }
-                }
+            if (viewModel.isFirstTimeLaunch() || viewModel.isNotRegistered()) {
+                viewModel.markFirstTimeLaunch()
+                viewModel.navigate(R.id.action_splashFragment_to_onboardingFragment, bundle)
+            } else {
+                viewModel.navigate(R.id.action_splashFragment_to_mainFragment)
             }
         }
     }

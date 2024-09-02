@@ -11,7 +11,7 @@ class SetUserDataUseCaseImpl(
     override fun setUserData(value: UserDataFields) {
         when (value) {
             is UserDataFields.UserName -> repository.setUserName(value.userName)
-            is UserDataFields.UserId -> repository.setUserId()
+            is UserDataFields.UserId -> repository.setUserId(value.userId)
         }
     }
 }

@@ -48,6 +48,17 @@
         app:layout_constraintTop_toBottomOf="@id/et_name"
         tools:text="@string/registration_enter_name" />
 
+    <com.davai.uikit.ProgressBarView
+        android:id="@+id/progress_bar"
+        android:layout_width="@dimen/dimen_80"
+        android:layout_height="@dimen/dimen_80"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_name"
+        android:visibility="visible" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_enter"
         style="@style/Text.Base.Button.Regular"
