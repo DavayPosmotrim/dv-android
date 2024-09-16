@@ -24,6 +24,7 @@ ktor = "2.3.12"
 room_version = "2.6.1"
 
 detekt = "1.23.3"
+my_tracker = "3.3.2"
 
 coil = "2.3.0"
 flexbox = "3.0.0"
@@ -72,6 +73,8 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 staticAnalysis-detektCli = { module = "io.gitlab.arturbosch.detekt:detekt-cli", version.ref = "detekt" }
 staticAnalysis-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 staticAnalysis-detektLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
+
+tracker = { module = "com.my.tracker:mytracker-sdk", version.ref = "my_tracker" }
 
 [bundles]
 staticAnalysis-detekt = [
