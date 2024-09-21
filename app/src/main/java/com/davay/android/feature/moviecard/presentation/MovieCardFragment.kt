@@ -1,7 +1,7 @@
 package com.davay.android.feature.moviecard.presentation
 
-import android.os.Bundle
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.navArgs
 import com.davai.extensions.dpToPx
 import com.davay.android.R
 import com.davay.android.base.BaseFragment
@@ -15,7 +15,6 @@ import com.davay.android.feature.selectmovie.presentation.AdditionalInfoInflater
 import com.davay.android.utils.MovieDetailsHelper
 import com.davay.android.utils.MovieDetailsHelperImpl
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.serialization.json.Json
 
 class MovieCardFragment :
     BaseFragment<FragmentSelectMovieBinding, BaseViewModel>(FragmentSelectMovieBinding::inflate) {
@@ -25,16 +24,12 @@ class MovieCardFragment :
         .appComponent(AppComponentHolder.getComponent())
         .build()
 
-    private var movieDetails: MovieDetails? = null
     private val movieDetailsHelper: MovieDetailsHelper = MovieDetailsHelperImpl()
     private val additionalInfoInflater: AdditionalInfoInflater = MovieDetailsHelperImpl()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            movieDetails = Json.decodeFromString(it.getString(MOVIE_DETAILS_KEY) ?: "")
-        }
+    private val movieDetails: MovieDetails by lazy {
+        val args: MovieCardFragmentArgs by navArgs()
+        args.movieDetails
     }
 
     override fun initViews() {
@@ -58,7 +53,7 @@ class MovieCardFragment :
     private fun setViewsAndInflate() = with(binding) {
         rvFilmCard.isVisible = false
         movieCard.root.isVisible = true
-        movieDetails?.let { movie ->
+        movieDetails.let { movie ->
             fillCardData(movie)
             fillInfo(movie)
             additionalInfoInflater.setRate(
@@ -124,7 +119,6 @@ class MovieCardFragment :
     }
 
     companion object {
-        const val MOVIE_DETAILS_KEY = "movie_details_key"
         private const val BOTTOMSHEET_PEEK_HEIGHT_112_DP = 112
         private const val MARGIN_TOP_16_DP = 16
     }

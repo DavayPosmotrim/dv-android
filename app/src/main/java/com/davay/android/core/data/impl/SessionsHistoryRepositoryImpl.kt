@@ -34,10 +34,10 @@ class SessionsHistoryRepositoryImpl @Inject constructor(
             Result.Error(ErrorType.UNKNOWN_ERROR)
         }
 
-    override suspend fun getSessionWithMovies(sessionId: String): SessionWithMovies? =
+    override suspend fun getSessionWithMovies(session: Session): SessionWithMovies? =
         @Suppress("TooGenericExceptionCaught", "PrintStackTrace")
         try {
-            historyDao.getSessionWithMovies(sessionId).toDomain()
+            historyDao.getSessionWithMovies(session.id).toDomain()
         } catch (e: Exception) {
             if (BuildConfig.DEBUG) {
                 e.printStackTrace()
@@ -45,7 +45,7 @@ class SessionsHistoryRepositoryImpl @Inject constructor(
             null
         }
 
-    override suspend fun getSessionsHistory(): List<Session>? =
+    override suspend fun getSessionsHistory(): List<Session> =
         @Suppress("TooGenericExceptionCaught", "PrintStackTrace")
         try {
             historyDao.getSessions().map { it.toDomain() }
@@ -53,6 +53,6 @@ class SessionsHistoryRepositoryImpl @Inject constructor(
             if (BuildConfig.DEBUG) {
                 e.printStackTrace()
             }
-            null
+            emptyList()
         }
 }

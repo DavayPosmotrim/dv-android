@@ -143,15 +143,11 @@ class SessionConnectionBottomSheetFragment :
 
     private fun buttonClicked() {
         val etCodeValue = binding.etCode.text.toString()
-        val bundle = Bundle().apply {
-            putString("ET_CODE_KEY", etCodeValue)
-        }
         viewModel.buttonClicked(binding.etCode.text)
         if (viewModel.state.value == SessionConnectionState.SUCCESS) {
-            viewModel.navigate(
-                R.id.action_sessionConnectionFragment_to_sessionListFragment,
-                bundle
-            )
+            val action = SessionConnectionBottomSheetFragmentDirections
+                .actionSessionConnectionFragmentToSessionListFragment(etCodeValue)
+            viewModel.navigate(action)
             bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }

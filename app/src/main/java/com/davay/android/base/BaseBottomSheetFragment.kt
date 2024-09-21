@@ -70,7 +70,7 @@ abstract class BaseBottomSheetFragment<VB : ViewBinding, VM : BaseViewModel>(
         when (navCommand) {
             is NavigationCommand.ToDirection -> findNavController().navigate(
                 navCommand.directions,
-                navCommand.bundle
+                navCommand.navOptions
             )
 
             is NavigationCommand.Back -> findNavController().navigateUp()

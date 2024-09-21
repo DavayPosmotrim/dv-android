@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.davai.util.setOnDebouncedClickListener
 import com.davay.android.R
@@ -24,17 +25,15 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding, OnboardingVie
 ) {
     override val viewModel: OnboardingViewModel by injectViewModel<OnboardingViewModel>()
     private val dataProvider = OnboardingDataProvider()
-    private var arrayOfIds =
-        dataProvider.getInstructionOnboardingData() // дефолтно устанавливаем контент онбординга с инструкциями
+
+    private var onboardingItems = dataProvider.getInstructionOnboardingData()
     private val fragmentList = mutableListOf<Fragment>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            val setNumber = it.getInt(ONBOARDING_KEY, ONBOARDING_INSTRUCTION_SET)
-            if (setNumber == ONBOARDING_MAIN_SET) {
-                arrayOfIds = dataProvider.getMainOnboardingData()
-            }
+        val args: OnboardingFragmentArgs by navArgs()
+        if (args.setNumber == ONBOARDING_MAIN_SET) {
+            onboardingItems = dataProvider.getMainOnboardingData()
         }
     }
 
@@ -51,17 +50,18 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding, OnboardingVie
     override fun initViews() = with(binding) {
         fragmentList.clear()
         fragmentList.addAll(
-            listOf(
-                OnboardingFirstFragment.newInstance(arrayOfIds[0]),
-                OnboardingFirstFragment.newInstance(arrayOfIds[1]),
-                OnboardingFirstFragment.newInstance(arrayOfIds[2])
-            )
+            onboardingItems.filter { item ->
+                item.textResId != null || item.imageResId != null || item.descriptionResId != null
+            }.map { item ->
+                OnboardingFirstFragment.newInstance(item)
+            }
         )
         viewpager.adapter = OnboardingViewPagerAdapter(
             fragmentList, viewLifecycleOwner.lifecycle, this@OnboardingFragment.childFragmentManager
         )
         ciIndicator.setViewPager(viewpager)
     }
+
 
     private fun setUpViewPager() {
         binding.viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -86,13 +86,15 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding, OnboardingVie
             if (nextFragment < fragmentList.size) {
                 binding.viewpager.setCurrentItem(nextFragment, true)
             } else {
-                viewModel.navigate(arrayOfIds.last()[0])
+                val lastItem = onboardingItems.last()
+                lastItem.action?.let { action ->
+                    viewModel.navigate(action)
+                }
             }
         }
     }
 
     companion object {
-        const val ONBOARDING_KEY = "onboarding_key"
         const val ONBOARDING_MAIN_SET = 0
         const val ONBOARDING_INSTRUCTION_SET = 1
     }

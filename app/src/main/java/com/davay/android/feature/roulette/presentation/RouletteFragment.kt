@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.davai.util.setOnDebouncedClickListener
@@ -15,6 +16,7 @@ import com.davay.android.core.domain.models.MovieDetails
 import com.davay.android.databinding.FragmentRouletteBinding
 import com.davay.android.di.AppComponentHolder
 import com.davay.android.di.ScreenComponent
+import com.davay.android.feature.match.presentation.MatchBottomSheetArgs
 import com.davay.android.feature.match.presentation.MatchBottomSheetFragment
 import com.davay.android.feature.roulette.di.DaggerRouletteFragmentComponent
 import com.davay.android.feature.roulette.presentation.carouselrecycler.CarouselAdapter
@@ -31,8 +33,6 @@ import com.google.android.flexbox.JustifyContent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 class RouletteFragment :
     BaseFragment<FragmentRouletteBinding, RouletteViewModel>(FragmentRouletteBinding::inflate) {
@@ -86,9 +86,10 @@ class RouletteFragment :
      *  Для остальных пусто или false.
      */
     private fun handleStartFragment() {
-        val isInitiator: Boolean? = arguments?.getBoolean(ROULETTE_INITIATOR)
-        if (isInitiator == true) {
-            arguments?.remove(ROULETTE_INITIATOR)
+        val args: RouletteFragmentArgs by navArgs()
+        val isInitiator = args.rouletteInitiator
+
+        if (isInitiator) {
             initBottomSheetIntro()
         } else {
             bottomSheetBehaviorIntro.state = BottomSheetBehavior.STATE_HIDDEN
@@ -193,15 +194,20 @@ class RouletteFragment :
         Toast.makeText(requireContext(), "Ошибка", Toast.LENGTH_SHORT).show()
     }
 
+
     private fun handleMatchState(state: RouletteState.Match) {
-        val movieDetails = Json.encodeToString(state.film)
-        val matchBottomSheetFragment = MatchBottomSheetFragment.newInstance(
-            movieDetails = movieDetails,
+        val matchArgs = MatchBottomSheetArgs(
+            movieDetails = state.film,
             buttonText = getString(R.string.roulette_to_film_list),
             showDismisAnimation = false
         )
-        matchBottomSheetFragment.show(parentFragmentManager, matchBottomSheetFragment.tag)
+        viewModel.navigate(
+            RouletteFragmentDirections.actionRouletteFragmentToMatchBottomSheetFragment(
+                matchArgs
+            )
+        )
     }
+
 
     private fun handleRouletteState(state: RouletteState.Roulette) {
         if (binding.recyclerViewRoulette.adapter == null) {
@@ -246,6 +252,5 @@ class RouletteFragment :
     companion object {
         private const val DELAY_TIME_MS_1000 = 1000L
         private const val ROULETTE_SCROLL_COEFFICIENT = 4
-        const val ROULETTE_INITIATOR = "ROULETTE_INITIATOR"
     }
 }

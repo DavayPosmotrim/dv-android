@@ -81,7 +81,7 @@ class RegistrationFragment :
         etName.isEnabled = isLoading.not()
         tvErrorHint.text = state?.getMessage(requireContext()) ?: ""
         if (state == UserNameState.SUCCESS) {
-            viewModel.navigate(R.id.action_registrationFragment_to_mainFragment)
+            viewModel.navigate(RegistrationFragmentDirections.actionRegistrationFragmentToMainFragment())
         }
     }
 

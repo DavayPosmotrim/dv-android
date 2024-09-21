@@ -1,11 +1,11 @@
 package com.davay.android.core.domain.models
 
+import android.os.Parcelable
 import com.davay.android.extensions.timeStamp
-import kotlinx.serialization.Serializable
+import kotlinx.parcelize.Parcelize
 
 typealias userName = String
-
-@Serializable
+@Parcelize
 data class Session(
     val id: String,
     val users: List<userName>,
@@ -14,4 +14,4 @@ data class Session(
     val date: timeStamp,
     val status: SessionStatus,
     val imgUrl: String
-)
+) : Parcelable

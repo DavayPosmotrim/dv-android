@@ -101,3 +101,6 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+# SafeArgs
+navigationSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "nav_version" }
+kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }

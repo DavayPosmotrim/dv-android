@@ -1,12 +1,11 @@
 package com.davay.android.base
 
-import android.os.Bundle
 import android.util.Log
-import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import com.davai.util.debounceUnitFun
 import com.davay.android.BuildConfig
@@ -28,26 +27,14 @@ abstract class BaseViewModel : ViewModel() {
         coroutineScope = viewModelScope
     )
 
-    fun navigate(@IdRes navDirections: Int) {
+    fun navigate(navDirections: NavDirections) {
         debounceNavigate(NavigationCommand.ToDirection(navDirections)) { command ->
             _navigation.value = Event(command)
         }
     }
 
-    fun navigate(@IdRes navDirections: Int, bundle: Bundle) {
-        debounceNavigate(NavigationCommand.ToDirection(navDirections, bundle)) { command ->
-            _navigation.value = Event(command)
-        }
-    }
-
-    fun navigate(@IdRes navDirections: Int, navOptions: NavOptions) {
-        debounceNavigate(NavigationCommand.ToDirection(navDirections, null, navOptions)) { command ->
-            _navigation.value = Event(command)
-        }
-    }
-
-    fun navigate(@IdRes navDirections: Int, bundle: Bundle, navOptions: NavOptions) {
-        debounceNavigate(NavigationCommand.ToDirection(navDirections, bundle, navOptions)) { command ->
+    fun navigate(navDirections: NavDirections, navOptions: NavOptions) {
+        debounceNavigate(NavigationCommand.ToDirection(navDirections, navOptions)) { command ->
             _navigation.value = Event(command)
         }
     }
@@ -61,17 +48,22 @@ abstract class BaseViewModel : ViewModel() {
     /**
      * Метод чистит backstack до MainFragment и делает сооветствующий переход
      */
-    fun clearBackStackToMain() {
+
+    fun clearBackStackToMain(navDirections: NavDirections) {
         val navOptions = NavOptions.Builder()
-            .setPopUpTo(R.id.main_navigation_graph, inclusive = true)
+            .setPopUpTo(R.id.mainFragment, inclusive = false)
             .build()
 
-        navigate(R.id.mainFragment, navOptions)
+        _navigation.value = Event(
+            NavigationCommand.ToDirection(
+                navDirections,
+                navOptions
+            )
+        )
     }
 
-    fun clearBackStackToMainAndNavigate(@IdRes navDirections: Int) {
-        clearBackStackToMain()
-        navigate(navDirections)
+    fun clearBackStackToMainAndNavigate(navDirections: NavDirections) {
+        clearBackStackToMain(navDirections)
     }
 
     protected fun mapErrorToUiState(errorType: ErrorType): ErrorScreenState {

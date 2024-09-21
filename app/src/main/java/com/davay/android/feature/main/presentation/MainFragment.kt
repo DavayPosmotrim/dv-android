@@ -63,7 +63,8 @@ class MainFragment :
     override fun subscribe() {
         with(binding) {
             msbFavorite.setOnClickListener {
-                viewModel.navigate(R.id.action_mainFragment_to_matchedSessionListFragment)
+                viewModel.navigate(MainFragmentDirections.actionMainFragmentToMatchedSessionListFragment())
+
             }
             msbJoinSession.setOnClickListener {
                 joinSession()
@@ -74,8 +75,7 @@ class MainFragment :
             binding.ivEditUserName.setOnDebouncedClickListener(
                 coroutineScope = lifecycleScope
             ) {
-                val currentName = binding.tvUserName.text.toString()
-                changeName(currentName)
+                changeName()
             }
         }
     }
@@ -91,16 +91,16 @@ class MainFragment :
     }
 
     private fun joinSession() {
-        viewModel.navigate(R.id.action_mainFragment_to_sessionConnectionFragment)
+        viewModel.navigate(MainFragmentDirections.actionMainFragmentToSessionConnectionFragment())
     }
 
-    private fun changeName(oldName: String) {
-        val bottomSheetFragment = ChangeNameBottomSheetFragment.newInstance(oldName)
-        bottomSheetFragment.show(parentFragmentManager, "tag")
+    private fun changeName() {
+        val action = MainFragmentDirections.actionMainFragmentToChangeNameFragment()
+        viewModel.navigate(action)
     }
 
     private fun createSession() {
-        viewModel.navigate(R.id.action_mainFragment_to_createSessionFragment)
+        viewModel.navigate(MainFragmentDirections.actionMainFragmentToCreateSessionFragment())
     }
 
     private fun updateUserName(newName: String?) {

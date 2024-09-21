@@ -1,8 +1,9 @@
 package com.davay.android.core.domain.models
 
-import kotlinx.serialization.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-@Serializable
+@Parcelize
 data class MovieDetails(
     val id: Int,
     val name: String,
@@ -19,4 +20,4 @@ data class MovieDetails(
     val genres: List<String>,
     val directors: List<String>?,
     val actors: List<String>?
-)
+) : Parcelable

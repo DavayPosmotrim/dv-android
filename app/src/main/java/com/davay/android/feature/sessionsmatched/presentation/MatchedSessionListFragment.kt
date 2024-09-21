@@ -1,17 +1,14 @@
 package com.davay.android.feature.sessionsmatched.presentation
 
-import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.davai.extensions.dpToPx
-import com.davay.android.R
 import com.davay.android.base.BaseFragment
 import com.davay.android.core.domain.models.Session
 import com.davay.android.databinding.FragmentMatchedSessionListBinding
 import com.davay.android.di.AppComponentHolder
 import com.davay.android.di.ScreenComponent
-import com.davay.android.feature.matchedsession.presentation.MatchedSessionFragment
 import com.davay.android.feature.sessionsmatched.di.DaggerMatchedSessionListFragmentComponent
 import com.davay.android.feature.sessionsmatched.presentation.adapters.SessionListAdapter
 import com.davay.android.feature.sessionsmatched.presentation.adapters.TopSpacingItemDecoration
@@ -27,8 +24,8 @@ class MatchedSessionListFragment :
             .appComponent(AppComponentHolder.getComponent())
             .build()
 
-    private val sessionsAdapter = SessionListAdapter(lifecycleScope) { id ->
-        navigateToSessionMovies(id)
+    private val sessionsAdapter = SessionListAdapter(lifecycleScope) { session ->
+        navigateToSessionMovies(session)
     }
 
 
@@ -84,10 +81,9 @@ class MatchedSessionListFragment :
         progressBar.isVisible = true
     }
 
-    private fun navigateToSessionMovies(id: String) {
-        val bundle = Bundle().apply {
-            putString(MatchedSessionFragment.SESSION_ID, id)
-        }
-        viewModel.navigate(R.id.action_matchedSessionListFragment_to_matchedSessionFragment, bundle)
+    private fun navigateToSessionMovies(session: Session) {
+        val action = MatchedSessionListFragmentDirections
+            .actionMatchedSessionListFragmentToMatchedSessionFragment(session)
+        viewModel.navigate(action)
     }
 }

@@ -155,14 +155,7 @@ class ChangeNameBottomSheetFragment :
         private const val BOTTOM_SHEET_HIDE_PERCENT_60 = 0.6f
         private const val BOTTOM_SHEET_HEIGHT = 0.9f
 
-        private const val ARG_NAME = "name"
         const val REQUEST_KEY = "changeNameRequestKey"
         const val BUNDLE_KEY_NAME = "changedName"
-
-        fun newInstance(name: String) = ChangeNameBottomSheetFragment().apply {
-            arguments = Bundle().apply {
-                putString(ARG_NAME, name)
-            }
-        }
     }
 }

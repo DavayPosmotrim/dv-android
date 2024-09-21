@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class SessionListAdapter(
     private val coroutineScope: CoroutineScope,
-    private val onSessionClickListener: ((id: String) -> Unit)?
+    private val onSessionClickListener: ((session: Session) -> Unit)?
 ) : RecyclerView.Adapter<SessionListAdapter.SessionListViewHolder>() {
 
     private val sessionList = mutableListOf<Session>()
@@ -47,7 +47,7 @@ class SessionListAdapter(
         ) { _ ->
             val position = viewHolder.adapterPosition
             if (position != RecyclerView.NO_POSITION) {
-                onSessionClickListener?.invoke(sessionList[position].id)
+                onSessionClickListener?.invoke(sessionList[position])
             }
         }
         return viewHolder

@@ -5,27 +5,24 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.davai.extensions.dpToPx
 import com.davai.uikit.BannerView
 import com.davai.uikit.ButtonView
 import com.davai.uikit.MainDialogFragment
 import com.davai.util.setOnDebouncedClickListener
-import com.davay.android.BuildConfig
 import com.davay.android.R
 import com.davay.android.base.BaseFragment
-import com.davay.android.core.domain.models.Session
 import com.davay.android.core.presentation.MainActivity
 import com.davay.android.databinding.FragmentWaitSessionBinding
 import com.davay.android.di.AppComponentHolder
 import com.davay.android.di.ScreenComponent
-import com.davay.android.feature.createsession.presentation.createsession.CreateSessionViewModel
 import com.davay.android.feature.onboarding.presentation.OnboardingFragment
 import com.davay.android.feature.waitsession.di.DaggerWaitSessionFragmentComponent
 import com.davay.android.feature.waitsession.presentation.adapter.CustomItemDecorator
@@ -35,7 +32,6 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import kotlinx.serialization.json.Json
 
 class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSessionViewModel>(
     FragmentWaitSessionBinding::inflate
@@ -45,7 +41,8 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
     private var sendButton: ButtonView? = null
     private var dialog: MainDialogFragment? = null
     private var launcher: ActivityResultLauncher<Intent>? = null
-    private var session: Session? = null
+
+    private val args: WaitSessionFragmentArgs by navArgs()
 
     override fun diComponent(): ScreenComponent = DaggerWaitSessionFragmentComponent.builder()
         .appComponent(AppComponentHolder.getComponent())
@@ -53,12 +50,6 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            if (BuildConfig.DEBUG) {
-                Log.i(TAG, "${it.getString(CreateSessionViewModel.SESSION_DATA)}")
-            }
-            session = Json.decodeFromString(it.getString(CreateSessionViewModel.SESSION_DATA) ?: "")
-        }
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {
@@ -81,8 +72,9 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.tvCode.text = args.session.id
         sendButton = binding.sendButton
+
 
         initRecycler()
         userAdapter.setItems(
@@ -90,12 +82,12 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
         )
 
         binding.llButtonContainer.setOnDebouncedClickListener(coroutineScope = lifecycleScope) {
-            val code = binding.tvCode.text.toString()
+            val code = args.session.id
             copyTextToClipboard(code)
         }
 
         sendButton?.setOnDebouncedClickListener(coroutineScope = lifecycleScope) {
-            val code = binding.tvCode.text.toString()
+            val code = args.session.id
             if (it.isEnabled) {
                 sendCode(code)
                 sendButton?.setButtonEnabled(false)
@@ -106,7 +98,13 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
             title = getString(R.string.leave_wait_session_title),
             message = getString(R.string.leave_wait_session_dialog_message),
             yesAction = {
-                viewModel.navigateToCreateSession()
+                /**
+                 * Вместо popBackStack используется именно такая навигация для обхода ошибки при возврате назад на экран создания сессии после
+                 * смены конфигурации устройства
+                 */
+                viewModel.clearBackStackToMainAndNavigate(
+                    WaitSessionFragmentDirections.actionWaitSessionFragmentToCreateSessionFragment()
+                )
             }
         )
     }
@@ -177,18 +175,13 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
             } else {
                 if (viewModel.isFirstTimeLaunch()) {
                     viewModel.markFirstTimeLaunch()
-                    val bundle = Bundle().apply {
-                        putInt(
-                            OnboardingFragment.ONBOARDING_KEY,
-                            OnboardingFragment.ONBOARDING_INSTRUCTION_SET
-                        )
-                    }
-                    viewModel.navigate(
-                        R.id.action_waitSessionFragment_to_onboardingFragment,
-                        bundle
-                    )
+                    val action = WaitSessionFragmentDirections
+                        .actionWaitSessionFragmentToOnboardingFragment(OnboardingFragment.ONBOARDING_INSTRUCTION_SET)
+                    viewModel.navigate(action)
                 } else {
-                    viewModel.navigate(R.id.action_waitSessionFragment_to_selectMovieFragment)
+                    val action = WaitSessionFragmentDirections
+                        .actionWaitSessionFragmentToSelectMovieFragment()
+                    viewModel.navigate(action)
                 }
             }
         }
@@ -212,6 +205,5 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
         const val SPACING_BETWEEN_RV_ITEMS_8_DP = 8
         const val CUSTOM_DIALOG_TAG = "customDialog"
         const val MIN_USER_TO_START_2 = 2
-        val TAG = WaitSessionFragment::class.simpleName
     }
 }

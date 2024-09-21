@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.davai.extensions.dpToPx
 import com.davai.uikit.MainDialogFragment
 import com.davai.util.setOnDebouncedClickListener
@@ -26,7 +27,6 @@ class SessionListFragment : BaseFragment<FragmentSessionListBinding, SessionList
 ) {
     override val viewModel: SessionListViewModel by injectViewModel<SessionListViewModel>()
     private val userAdapter = UserAdapter()
-    private var etCode: String? = null
     private var dialog: MainDialogFragment? = null
 
     override fun diComponent(): ScreenComponent = DaggerSessionListFragmentComponent.builder()
@@ -35,9 +35,7 @@ class SessionListFragment : BaseFragment<FragmentSessionListBinding, SessionList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            etCode = it.getString(ET_CODE_KEY)
-        }
+
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {
@@ -71,6 +69,8 @@ class SessionListFragment : BaseFragment<FragmentSessionListBinding, SessionList
     }
 
     private fun setupToolbar() {
+        val args: SessionListFragmentArgs by navArgs()
+        val etCode = args.etCode
         binding.toolbar.setTitleText(getString(R.string.session_list_name) + " " + etCode)
     }
 
@@ -99,6 +99,5 @@ class SessionListFragment : BaseFragment<FragmentSessionListBinding, SessionList
     companion object {
         private const val SPACING_BETWEEN_RV_ITEMS_8_DP = 8
         private const val CUSTOM_DIALOG_TAG = "customDialog"
-        private const val ET_CODE_KEY = "ET_CODE_KEY"
     }
 }
