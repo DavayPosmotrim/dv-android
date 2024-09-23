@@ -9,6 +9,8 @@ android {
     namespace = "com.davay.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
+    val sdkKey: String = project.findProperty("mytracker_sdk_key") as String? ?: ""
+
     defaultConfig {
         applicationId = "com.davay.android"
         minSdk = libs.versions.minSdk.get().toInt()
@@ -20,7 +22,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "MYTRACKER_SDK_KEY", "\"$sdkKey\"")
+        }
         release {
+            buildConfigField("String", "MYTRACKER_SDK_KEY", "\"$sdkKey\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
