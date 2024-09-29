@@ -14,6 +14,7 @@ import com.davay.android.core.data.network.model.NetworkParams.PATH_USERS
 import com.davay.android.core.domain.api.UserDataRepository
 import com.davay.android.core.domain.api.WebsocketRepository
 import com.davay.android.core.domain.models.ErrorType
+import com.davay.android.core.domain.models.NoInternetConnectionException
 import com.davay.android.core.domain.models.Result
 import com.davay.android.core.domain.models.Session
 import com.davay.android.core.domain.models.SessionStatus
@@ -37,7 +38,7 @@ class WebsocketRepositoryImpl @Inject constructor(
     private val websocketSessionStatusClient: WebsocketNetworkClient<SessionStatusDto?>,
     @RouletteIdClient private val websocketRouletteIdClient: WebsocketNetworkClient<Int?>,
     @MatchesIdClient private val websocketMatchesIdClient: WebsocketNetworkClient<Int?>,
-    private val userDataRepository: UserDataRepository,
+    userDataRepository: UserDataRepository
 ) : WebsocketRepository {
 
     private val deviceId = userDataRepository.getUserId()
@@ -85,6 +86,11 @@ class WebsocketRepositoryImpl @Inject constructor(
                     emit(Result.Error(ErrorType.UNKNOWN_ERROR))
                 }
             }
+        } catch (e: NoInternetConnectionException) {
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace()
+            }
+            emit(Result.Error(ErrorType.NO_CONNECTION))
         } catch (e: Exception) {
             if (BuildConfig.DEBUG) {
                 e.printStackTrace()
@@ -128,6 +134,11 @@ class WebsocketRepositoryImpl @Inject constructor(
                             emit(Result.Error(ErrorType.UNKNOWN_ERROR))
                         }
                     }
+            } catch (e: NoInternetConnectionException) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
+                emit(Result.Error(ErrorType.NO_CONNECTION))
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
                     e.printStackTrace()
@@ -171,6 +182,11 @@ class WebsocketRepositoryImpl @Inject constructor(
                             emit(Result.Error(ErrorType.UNKNOWN_ERROR))
                         }
                     }
+            } catch (e: NoInternetConnectionException) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
+                emit(Result.Error(ErrorType.NO_CONNECTION))
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
                     e.printStackTrace()
@@ -214,6 +230,11 @@ class WebsocketRepositoryImpl @Inject constructor(
                             emit(Result.Error(ErrorType.UNKNOWN_ERROR))
                         }
                     }
+            } catch (e: NoInternetConnectionException) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
+                emit(Result.Error(ErrorType.NO_CONNECTION))
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
                     e.printStackTrace()
@@ -257,6 +278,11 @@ class WebsocketRepositoryImpl @Inject constructor(
                             emit(Result.Error(ErrorType.UNKNOWN_ERROR))
                         }
                     }
+            } catch (e: NoInternetConnectionException) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                }
+                emit(Result.Error(ErrorType.NO_CONNECTION))
             } catch (e: Exception) {
                 if (BuildConfig.DEBUG) {
                     e.printStackTrace()
