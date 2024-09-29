@@ -1,5 +1,6 @@
 package com.davay.android.di
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.davay.android.core.data.dto.SessionResultDto
@@ -26,30 +27,40 @@ import javax.inject.Singleton
 class CommonWebsocketModule {
 
     @Provides
-    fun provideWebsocketUsersClient(): WebsocketNetworkClient<List<UserDto>?> {
-        return WebsocketUsersClient()
+    fun provideWebsocketUsersClient(
+        context: Context
+    ): WebsocketNetworkClient<List<UserDto>?> {
+        return WebsocketUsersClient(context)
     }
 
     @Provides
-    fun provideWebsocketSessionResultClient(): WebsocketNetworkClient<SessionResultDto?> {
-        return WebsocketSessionResultClient()
+    fun provideWebsocketSessionResultClient(
+        context: Context
+    ): WebsocketNetworkClient<SessionResultDto?> {
+        return WebsocketSessionResultClient(context)
     }
 
     @Provides
-    fun provideWebsocketSessionStatusClient(): WebsocketNetworkClient<SessionStatusDto?> {
-        return WebsocketSessionStatusClient()
+    fun provideWebsocketSessionStatusClient(
+        context: Context
+    ): WebsocketNetworkClient<SessionStatusDto?> {
+        return WebsocketSessionStatusClient(context)
     }
 
     @RouletteIdClient
     @Provides
-    fun provideWebsocketRouletteIdClient(): WebsocketNetworkClient<Int?> {
-        return WebsocketMovieIdClient()
+    fun provideWebsocketRouletteIdClient(
+        context: Context
+    ): WebsocketNetworkClient<Int?> {
+        return WebsocketMovieIdClient(context)
     }
 
     @MatchesIdClient
     @Provides
-    fun provideWebsocketMatchesIdClient(): WebsocketNetworkClient<Int?> {
-        return WebsocketMovieIdClient()
+    fun provideWebsocketMatchesIdClient(
+        context: Context
+    ): WebsocketNetworkClient<Int?> {
+        return WebsocketMovieIdClient(context)
     }
 
     @Suppress("LongParameterList")
