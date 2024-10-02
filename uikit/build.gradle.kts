@@ -33,6 +33,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    kotlin {
+        jvmToolchain(17)
+    }
 }
 
 dependencies {
