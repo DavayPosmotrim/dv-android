@@ -1,6 +1,7 @@
 package com.davay.android.feature.waitsession.presentation.adapter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.davay.android.R
 
@@ -25,16 +26,14 @@ class UserAdapter :
         }
     }
 
-    fun setItems(items: List<String>) {
+    fun setItems(newItems: List<String>) {
+        val diffCallback = UserDiffCallback(itemList, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
         itemList.clear()
-        itemList.addAll(items)
-        notifyDataSetChanged()
+        itemList.addAll(newItems)
+
+        diffResult.dispatchUpdatesTo(this)
     }
 
-    fun getItems(): List<String> = itemList
-
-    fun clearItems() {
-        itemList.clear()
-        notifyDataSetChanged()
-    }
 }
