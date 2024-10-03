@@ -6,10 +6,11 @@ import com.davay.android.BuildConfig
 import com.davay.android.core.data.network.model.NetworkParams.BASE_URL
 import com.davay.android.core.data.network.model.NetworkParams.DEVICE_ID_KEY
 import com.davay.android.core.data.network.model.NetworkParams.ORIGIN_KEY
-import com.davay.android.core.data.network.model.NetworkParams.ORIGIN_VALUE
+import com.davay.android.core.data.network.model.NetworkParams.ORIGIN_BASE_URL
 import com.davay.android.core.domain.models.NoInternetConnectionException
 import com.davay.android.extensions.isInternetReachable
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -44,7 +45,17 @@ abstract class WebsocketKtorNetworkClient<O>(
                 level = LogLevel.ALL
             }
         }
+
+        install(HttpRequestRetry) {
+            retryOnServerErrors(MAX_RETRIES_NUM_10)
+            retryOnException(maxRetries = MAX_RETRIES_NUM_10)
+            exponentialDelay(maxDelayMs = CONNECTION_TIME_OUT_60_SEC)
+            modifyRequest { request ->
+                request.headers.append("x-retry-count", 2.toString())
+            }
+        }
     }
+
     private var session: WebSocketSession? = null
 
     override suspend fun close() {
@@ -60,7 +71,7 @@ abstract class WebsocketKtorNetworkClient<O>(
         session = httpClient.webSocketSession(host = BASE_URL, path = path) {
             headers {
                 append(DEVICE_ID_KEY, deviceId)
-                append(ORIGIN_KEY, ORIGIN_VALUE)
+                append(ORIGIN_KEY, ORIGIN_BASE_URL)
             }
         }
         session?.let {
@@ -75,5 +86,7 @@ abstract class WebsocketKtorNetworkClient<O>(
 
     companion object {
         const val PING_INTERVAL = 20_000L
+        const val MAX_RETRIES_NUM_10 = 10
+        const val CONNECTION_TIME_OUT_60_SEC = 60_000L
     }
 }
