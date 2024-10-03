@@ -66,7 +66,7 @@ class CommonWebsocketModule {
     @Suppress("LongParameterList")
     @Provides
     fun provideWebsocketRepository(
-        websocketUsersClient: WebsocketNetworkClient<List<UserDto>?>,
+        websocketUsersClient: WebsocketNetworkClient<List<UserDto>>,
         websocketSessionResultClient: WebsocketNetworkClient<SessionResultDto?>,
         websocketSessionStatusClient: WebsocketNetworkClient<SessionStatusDto?>,
         @RouletteIdClient websocketRouletteIdClient: WebsocketNetworkClient<Int?>,
