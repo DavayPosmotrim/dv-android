@@ -1,29 +1,37 @@
 package com.davay.android.feature.waitsession.presentation
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.davay.android.R
 import com.davay.android.base.BaseViewModel
 import com.davay.android.core.domain.impl.CommonWebsocketInteractor
-import com.davay.android.core.domain.models.Result
+import com.davay.android.core.domain.impl.GetUserIdUseCase
+import com.davay.android.core.domain.models.SessionStatus
+import com.davay.android.core.presentation.states.SessionState
 import com.davay.android.feature.waitsession.domain.api.WaitSessionOnBoardingInteractor
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class WaitSessionViewModel @Inject constructor(
     private val waitSessionOnBoardingInteractor: WaitSessionOnBoardingInteractor,
     private val commonWebsocketInteractor: CommonWebsocketInteractor,
+    private val getUserIdUseCase: GetUserIdUseCase
 ) : BaseViewModel() {
+    private val _state = MutableStateFlow<WaitSessionState>(WaitSessionState.Content(emptyList()))
+    val state = _state.asStateFlow()
 
-    // для теста
-    private var sessionId: String? = null
+    private val _sessionState =
+        MutableStateFlow<SessionState?>(SessionState.Status(SessionStatus.WAITING))
 
-    fun subscribeWs(id: String) {
-        if (sessionId == null) {
-            sessionId = id
-            subscribeToWebsockets(id)
-        }
+    private val userId: String by lazy {
+        getUserIdUseCase()
+    }
+
+    init {
+        subscribeToWebsockets()
+        handleSessionStatus()
     }
 
     fun isFirstTimeLaunch(): Boolean {
@@ -36,9 +44,12 @@ class WaitSessionViewModel @Inject constructor(
 
     /**
      * Метод необходим для обхода ошибки при возврате назад на экран создания сессии после
-     * смены конфигурации устройства
+     * смены конфигурации устройства.
      */
-    fun navigateToCreateSession() {
+    fun navigateToCreateSessionAndUnsubscribeWebSockets() {
+        viewModelScope.launch {
+            commonWebsocketInteractor.unsubscribeAll()
+        }
         clearBackStackToMain()
         navigate(R.id.action_mainFragment_to_createSessionFragment)
     }
@@ -47,113 +58,56 @@ class WaitSessionViewModel @Inject constructor(
         navigate(R.id.action_waitSessionFragment_to_selectMovieFragment)
     }
 
-    // для теста
-    @Suppress(
-        "LongMethod",
-        "StringLiteralDuplication",
-        "CognitiveComplexMethod",
-        "CyclomaticComplexMethod"
-    )
-    private fun subscribeToWebsockets(sessionId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            commonWebsocketInteractor.subscribeUsers(
-                sessionId = sessionId
-            ).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        Log.d("WaitSessionViewModel", result.data.toString())
-                    }
+    private fun subscribeToWebsockets() {
+        subscribeToSessionStatus()
+        subscribeToUserList()
+    }
 
-                    is Result.Error -> {
-                        Log.d("WaitSessionViewModel", result.error.toString())
-                    }
+    private fun subscribeToSessionStatus() {
+        runSafelyUseCase(
+            useCaseFlow = commonWebsocketInteractor.getSessionStatus(),
+            onFailure = { error ->
+                _sessionState.update { SessionState.Error(mapErrorToUiState(error)) }
+            },
+            onSuccess = { sessionStatus ->
+                _sessionState.update {
+                    SessionState.Status(sessionStatus)
+                }
+            }
+        )
+    }
 
-                    null -> {
-                        Log.d("WaitSessionViewModel", null.toString())
-                    }
+    private fun subscribeToUserList() {
+        runSafelyUseCase(
+            useCaseFlow = commonWebsocketInteractor.getUsers(),
+            onFailure = { error ->
+                _state.update { WaitSessionState.Error(mapErrorToUiState(error)) }
+            },
+            onSuccess = { users ->
+                val userListString = users
+                    .sortedByDescending { it.userId == userId }
+                    .map { it.name }
+                _state.update {
+                    WaitSessionState.Content(userListString)
+                }
+            }
+        )
+    }
+
+    /**
+     * Делаем подписку на статус сессии.
+     * Этот статус не тянеттся во фрагмент, но влияет на состояние сессии
+     */
+    private fun handleSessionStatus() {
+        viewModelScope.launch {
+            _sessionState.collect { status ->
+                when (status) {
+                    SessionState.Status(SessionStatus.VOTING) -> navigateToNextScreen()
+                    SessionState.Status(SessionStatus.CLOSED) -> navigateToCreateSessionAndUnsubscribeWebSockets()
+                    is SessionState.Error -> _state.update { WaitSessionState.Error(status.error) }
+                    else -> _sessionState.update { SessionState.Status(SessionStatus.WAITING) }
                 }
             }
         }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            commonWebsocketInteractor.subscribeSessionStatus(
-                sessionId = sessionId
-            ).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        Log.d("WaitSessionViewModel", result.data.toString())
-                    }
-
-                    is Result.Error -> {
-                        Log.d("WaitSessionViewModel", result.error.toString())
-                    }
-
-                    null -> {
-                        Log.d("WaitSessionViewModel", null.toString())
-                    }
-                }
-            }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            commonWebsocketInteractor.subscribeSessionResult(
-                sessionId = sessionId
-            ).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        Log.d("WaitSessionViewModel", result.data.toString())
-                    }
-
-                    is Result.Error -> {
-                        Log.d("WaitSessionViewModel", result.error.toString())
-                    }
-
-                    null -> {
-                        Log.d("WaitSessionViewModel", null.toString())
-                    }
-                }
-            }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            commonWebsocketInteractor.subscribeRouletteId(
-                sessionId = sessionId
-            ).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        Log.d("WaitSessionViewModel", result.data.toString())
-                    }
-
-                    is Result.Error -> {
-                        Log.d("WaitSessionViewModel", result.error.toString())
-                    }
-
-                    null -> {
-                        Log.d("WaitSessionViewModel", null.toString())
-                    }
-                }
-            }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            commonWebsocketInteractor.subscribeMatchesId(
-                sessionId = sessionId
-            ).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        Log.d("WaitSessionViewModel", result.data.toString())
-                    }
-
-                    is Result.Error -> {
-                        Log.d("WaitSessionViewModel", result.error.toString())
-                    }
-
-                    null -> {
-                        Log.d("WaitSessionViewModel", null.toString())
-                    }
-                }
-            }
-        }
-
     }
 }
