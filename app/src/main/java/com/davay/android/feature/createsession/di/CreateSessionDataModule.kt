@@ -9,6 +9,11 @@ import com.davay.android.feature.createsession.data.network.CreateSessionRequest
 import com.davay.android.feature.createsession.data.network.CreateSessionResponse
 import com.davay.android.feature.createsession.data.network.HttpCreateSessionKtorClient
 import com.davay.android.feature.createsession.domain.api.CreateSessionRepository
+import com.davay.android.feature.sessionlist.data.ConnectToSessionRepositoryImpl
+import com.davay.android.feature.sessionlist.data.network.ConnectToSessionRequest
+import com.davay.android.feature.sessionlist.data.network.ConnectToSessionResponse
+import com.davay.android.feature.sessionlist.data.network.HttpConnectToSessionKtorClient
+import com.davay.android.feature.sessionlist.domain.api.ConnectToSessionRepository
 import dagger.Module
 import dagger.Provides
 import io.ktor.client.HttpClient
@@ -25,6 +30,14 @@ class CreateSessionDataModule {
     }
 
     @Provides
+    fun provideConnectToSessionHttpNetworkClient(
+        context: Context,
+        httpClient: HttpClient
+    ): HttpKtorNetworkClient<ConnectToSessionRequest, ConnectToSessionResponse> {
+        return HttpConnectToSessionKtorClient(context, httpClient)
+    }
+
+    @Provides
     fun provideCreateSessionRepository(
         httpNetworkClient: HttpKtorNetworkClient<CreateSessionRequest, CreateSessionResponse>,
         userDataRepository: UserDataRepository,
@@ -34,6 +47,19 @@ class CreateSessionDataModule {
             httpNetworkClient,
             userDataRepository,
             appDatabase.movieIdDao()
+        )
+    }
+
+    @Provides
+    fun provideConnectToSessionRepository(
+        httpNetworkClient: HttpKtorNetworkClient<ConnectToSessionRequest, ConnectToSessionResponse>,
+        userDataRepository: UserDataRepository,
+        appDatabase: AppDatabase
+    ): ConnectToSessionRepository {
+        return ConnectToSessionRepositoryImpl(
+            appDatabase.movieIdDao(),
+            userDataRepository,
+            httpNetworkClient,
         )
     }
 }
