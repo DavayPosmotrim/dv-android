@@ -10,7 +10,7 @@ import javax.inject.Inject
 class GetCollectionsUseCase @Inject constructor(
     private val createSessionRepository: CreateSessionRepository
 ) {
-    fun execute(): Flow<Result<List<CompilationFilms>, ErrorType>> {
+    operator fun invoke(): Flow<Result<List<CompilationFilms>, ErrorType>> {
         return createSessionRepository.getCollections()
     }
 }

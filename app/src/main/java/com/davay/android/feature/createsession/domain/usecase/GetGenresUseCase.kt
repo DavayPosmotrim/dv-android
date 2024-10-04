@@ -10,7 +10,7 @@ import javax.inject.Inject
 class GetGenresUseCase @Inject constructor(
     private val createSessionRepository: CreateSessionRepository
 ) {
-    fun execute(): Flow<Result<List<Genre>, ErrorType>> {
+    operator fun invoke(): Flow<Result<List<Genre>, ErrorType>> {
         return createSessionRepository.getGenres()
     }
 }

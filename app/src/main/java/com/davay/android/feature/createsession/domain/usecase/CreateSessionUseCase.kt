@@ -14,7 +14,7 @@ class CreateSessionUseCase @Inject constructor(
     /**
      * Передаем имя параметра запроса и его значение
      */
-    fun execute(sessionType: SessionType, requestBody: List<String>): Flow<Result<Session, ErrorType>> {
+    operator fun invoke(sessionType: SessionType, requestBody: List<String>): Flow<Result<Session, ErrorType>> {
         return repository.createSession(sessionType, requestBody)
     }
 }
