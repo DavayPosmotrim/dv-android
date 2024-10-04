@@ -32,6 +32,14 @@ class CommonWebsocketInteractor @Inject constructor(
         return websocketRepository.subscribeSessionStatus(sessionId)
     }
 
+    suspend fun unsubscribeAll() {
+        websocketRepository.unsubscribeSessionStatus()
+        websocketRepository.unsubscribeSessionResult()
+        websocketRepository.unsubscribeUsers()
+        websocketRepository.unsubscribeRouletteId()
+        websocketRepository.unsubscribeMatchesId()
+    }
+
     suspend fun unsubscribeSessionStatus() {
         websocketRepository.unsubscribeSessionStatus()
     }
