@@ -24,11 +24,8 @@ class CommonWebsocketInteractor @Inject constructor(
         this.sessionId = sessionId
     }
 
-    fun subscribeAll(sessionId: String) {
-        this.sessionId = sessionId
-    }
 
-    fun subscribeSessionStatus(sessionId: String): StateFlow<Result<SessionStatus?, ErrorType>> {
+    fun subscribeSessionStatus(sessionId: String = this.sessionId): StateFlow<Result<SessionStatus?, ErrorType>> {
         return websocketRepository.subscribeSessionStatus(sessionId)
     }
 
@@ -47,7 +44,7 @@ class CommonWebsocketInteractor @Inject constructor(
     fun getSessionStatus(): StateFlow<Result<SessionStatus?, ErrorType>> =
         websocketRepository.sessionStatusStateFlow
 
-    fun subscribeUsers(sessionId: String): StateFlow<Result<List<User>, ErrorType>> {
+    fun subscribeUsers(sessionId: String = this.sessionId): StateFlow<Result<List<User>, ErrorType>?> {
         return websocketRepository.subscribeUsers(sessionId)
     }
 
@@ -55,10 +52,10 @@ class CommonWebsocketInteractor @Inject constructor(
         websocketRepository.unsubscribeUsers()
     }
 
-    fun getUsers(): StateFlow<Result<List<User>, ErrorType>> =
+    fun getUsers(): StateFlow<Result<List<User>, ErrorType>?> =
         websocketRepository.usersStateFlow
 
-    fun subscribeSessionResult(sessionId: String): StateFlow<Result<Session?, ErrorType>> {
+    fun subscribeSessionResult(sessionId: String = this.sessionId): StateFlow<Result<Session?, ErrorType>> {
         return websocketRepository.subscribeSessionResult(sessionId)
     }
 
@@ -69,7 +66,7 @@ class CommonWebsocketInteractor @Inject constructor(
     fun getSessionResult(): StateFlow<Result<Session?, ErrorType>> =
         websocketRepository.sessionResultFlow
 
-    fun subscribeRouletteId(sessionId: String): StateFlow<Result<movieId?, ErrorType>> {
+    fun subscribeRouletteId(sessionId: String = this.sessionId): StateFlow<Result<movieId?, ErrorType>> {
         return websocketRepository.subscribeRouletteId(sessionId)
     }
 
@@ -80,7 +77,7 @@ class CommonWebsocketInteractor @Inject constructor(
     fun getRouletteId(): StateFlow<Result<movieId?, ErrorType>> =
         websocketRepository.rouletteIdStateFlow
 
-    fun subscribeMatchesId(sessionId: String): StateFlow<Result<movieId?, ErrorType>> {
+    fun subscribeMatchesId(sessionId: String = this.sessionId): StateFlow<Result<movieId?, ErrorType>> {
         return websocketRepository.subscribeMatchesId(sessionId)
     }
 
