@@ -1,24 +1,27 @@
 package com.davay.android.feature.createsession.presentation.createsession
 
 import android.os.Bundle
+import androidx.lifecycle.viewModelScope
+import com.davay.android.BuildConfig
 import com.davay.android.R
 import com.davay.android.base.BaseViewModel
 import com.davay.android.core.domain.impl.CommonWebsocketInteractor
-import com.davay.android.core.domain.impl.LeaveSessionUseCase
+import com.davay.android.core.domain.models.ErrorScreenState
 import com.davay.android.core.domain.models.SessionShort
 import com.davay.android.core.domain.models.SessionStatus
 import com.davay.android.core.domain.models.converter.toSessionShort
 import com.davay.android.feature.sessionlist.presentation.ConnectToSessionState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 open class CreateSessionViewModel @Inject constructor(
     private val commonWebsocketInteractor: CommonWebsocketInteractor,
-    private val leaveSessionUseCase: LeaveSessionUseCase
 ) : BaseViewModel() {
     private val _state = MutableStateFlow<ConnectToSessionState>(ConnectToSessionState.Loading)
     val state = _state.asStateFlow()
@@ -34,37 +37,51 @@ open class CreateSessionViewModel @Inject constructor(
         )
     }
 
-    protected fun subscribeToWebsockets(sessionId: String) {
-        subscribeToUsers(sessionId)
-        subscribeSessionStatus(sessionId)
-        subscribeSessionResult(sessionId)
-        subscribeMatchesId(sessionId)
-        subscribeRouletteId(sessionId)
+    protected fun subscribeToWebsocketsAndUpdateSessionId(sessionId: String) {
+        commonWebsocketInteractor.updateSessionId(sessionId)
+        viewModelScope.launch {
+            subscribeToUsers()
+            subscribeSessionStatus()
+            subscribeSessionResult()
+            subscribeMatchesId()
+            subscribeRouletteId()
+        }
     }
 
-    private fun subscribeToUsers(sessionId: String) {
-        runSafelyUseCase(
-            useCaseFlow = commonWebsocketInteractor.subscribeUsers(sessionId),
-            onFailure = { error ->
-                _state.update { ConnectToSessionState.Error(mapErrorToUiState(error)) }
-            },
-            onSuccess = { list ->
-                if (_state.value is ConnectToSessionState.Content) {
-                    _state.update {
-                        ConnectToSessionState.Content(
-                            (_state.value as ConnectToSessionState.Content)
-                                .session
-                                .copy(users = list.map { it.name })
+    private fun subscribeToUsers() {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                commonWebsocketInteractor.subscribeUsers()
+                    .collect { result ->
+                        result?.fold(
+                            onSuccess = { list ->
+                                if (_state.value is ConnectToSessionState.Content) {
+                                    _state.update {
+                                        ConnectToSessionState.Content(
+                                            (_state.value as ConnectToSessionState.Content)
+                                                .session
+                                                .copy(users = list.map { it.name })
+                                        )
+                                    }
+                                }
+                            },
+                            onError = { error ->
+                                _state.update { ConnectToSessionState.Error(mapErrorToUiState(error)) }
+                            }
                         )
                     }
+            }.onFailure { error ->
+                _state.update { ConnectToSessionState.Error(ErrorScreenState.SERVER_ERROR) }
+                if (BuildConfig.DEBUG) {
+                    error.printStackTrace()
                 }
             }
-        )
+        }
     }
 
-    private fun subscribeSessionStatus(sessionId: String) {
+    private fun subscribeSessionStatus() {
         runSafelyUseCase(
-            useCaseFlow = commonWebsocketInteractor.subscribeSessionStatus(sessionId),
+            useCaseFlow = commonWebsocketInteractor.subscribeSessionStatus(),
             onFailure = { error ->
                 _state.update { ConnectToSessionState.Error(mapErrorToUiState(error)) }
             },
@@ -84,7 +101,7 @@ open class CreateSessionViewModel @Inject constructor(
                     }
 
                     SessionStatus.CLOSED -> {
-                        leaveSessionAndNavigateBack(sessionId)
+                        navigateBack()
                     }
 
                     else -> {
@@ -95,9 +112,9 @@ open class CreateSessionViewModel @Inject constructor(
         )
     }
 
-    private fun subscribeSessionResult(sessionId: String) {
+    private fun subscribeSessionResult() {
         runSafelyUseCase(
-            useCaseFlow = commonWebsocketInteractor.subscribeSessionResult(sessionId = sessionId),
+            useCaseFlow = commonWebsocketInteractor.subscribeSessionResult(),
             onSuccess = {},
             onFailure = { error ->
                 _state.update { ConnectToSessionState.Error(mapErrorToUiState(error)) }
@@ -105,9 +122,9 @@ open class CreateSessionViewModel @Inject constructor(
         )
     }
 
-    private fun subscribeMatchesId(sessionId: String) {
+    private fun subscribeMatchesId() {
         runSafelyUseCase(
-            useCaseFlow = commonWebsocketInteractor.subscribeMatchesId(sessionId),
+            useCaseFlow = commonWebsocketInteractor.subscribeMatchesId(),
             onSuccess = {},
             onFailure = { error ->
                 _state.update { ConnectToSessionState.Error(mapErrorToUiState(error)) }
@@ -115,25 +132,12 @@ open class CreateSessionViewModel @Inject constructor(
         )
     }
 
-    private fun subscribeRouletteId(sessionId: String) {
+    private fun subscribeRouletteId() {
         runSafelyUseCase(
-            useCaseFlow = commonWebsocketInteractor.subscribeRouletteId(sessionId),
+            useCaseFlow = commonWebsocketInteractor.subscribeRouletteId(),
             onSuccess = {},
             onFailure = { error ->
                 _state.update { ConnectToSessionState.Error(mapErrorToUiState(error)) }
-            }
-        )
-    }
-
-    fun leaveSessionAndNavigateBack(sessionId: String) {
-        _state.update { ConnectToSessionState.Loading }
-        runSafelyUseCase(
-            useCaseFlow = leaveSessionUseCase.execute(sessionId),
-            onFailure = {
-                navigateBack()
-            },
-            onSuccess = {
-                navigateBack()
             }
         )
     }
