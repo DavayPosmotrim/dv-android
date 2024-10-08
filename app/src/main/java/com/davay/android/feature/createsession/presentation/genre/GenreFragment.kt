@@ -42,7 +42,7 @@ class GenreFragment : BaseFragment<FragmentGenreBinding, GenreViewModel>(
     override fun subscribe() {
         super.subscribe()
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect { state ->
+            viewModel.genreState.collect { state ->
                 renderState(state)
             }
         }

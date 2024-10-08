@@ -33,7 +33,7 @@ class CompilationsFragment : BaseFragment<FragmentCompilationsBinding, Compilati
     override fun subscribe() {
         super.subscribe()
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect { state ->
+            viewModel.compilationsState.collect { state ->
                 renderState(state)
             }
         }
