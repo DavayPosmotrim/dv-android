@@ -3,6 +3,7 @@ package com.davay.android.feature.createsession.presentation.compilations
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.davay.android.BuildConfig
+import com.davay.android.core.domain.impl.CommonWebsocketInteractor
 import com.davay.android.core.domain.models.CompilationFilms
 import com.davay.android.core.domain.models.ErrorScreenState
 import com.davay.android.core.domain.models.converter.toSessionShort
@@ -20,10 +21,11 @@ import javax.inject.Inject
 
 class CompilationsViewModel @Inject constructor(
     private val getCollectionsUseCase: GetCollectionsUseCase,
-    private val createSessionUseCase: CreateSessionUseCase
-) : CreateSessionViewModel() {
+    private val createSessionUseCase: CreateSessionUseCase,
+    commonWebsocketInteractor: CommonWebsocketInteractor
+) : CreateSessionViewModel(commonWebsocketInteractor) {
     private val _state = MutableStateFlow<CompilationsState>(CompilationsState.Loading)
-    val state = _state.asStateFlow()
+    val compilationsState = _state.asStateFlow()
 
     private val selectedCompilations = mutableListOf<CompilationSelect>()
 
@@ -33,7 +35,7 @@ class CompilationsViewModel @Inject constructor(
 
     fun getCollectionList() {
         runSafelyUseCase(
-            useCaseFlow = getCollectionsUseCase.execute(),
+            useCaseFlow = getCollectionsUseCase(),
             onSuccess = { collections ->
                 if (collections.isEmpty()) {
                     _state.update { CompilationsState.Error(ErrorScreenState.EMPTY) }
@@ -92,13 +94,15 @@ class CompilationsViewModel @Inject constructor(
                     CompilationsState.CreateSessionLoading
                 }
                 runSafelyUseCase(
-                    useCaseFlow = createSessionUseCase.execute(SessionType.COLLECTIONS, collections),
+                    useCaseFlow = createSessionUseCase(SessionType.COLLECTIONS, collections),
                     onSuccess = { session ->
                         if (BuildConfig.DEBUG) {
                             Log.v(TAG, "session = $session")
                         }
-                        viewModelScope.launch(Dispatchers.Main) {
-                            navigateToWaitSession(session.toSessionShort())
+                        subscribeToWebsocketsAndUpdateSessionId(sessionId = session.id).also {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                navigateToWaitSession(session.toSessionShort())
+                            }
                         }
                     },
                     onFailure = { error ->

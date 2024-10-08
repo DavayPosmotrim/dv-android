@@ -3,6 +3,7 @@ package com.davay.android.feature.createsession.presentation.genre
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.davay.android.BuildConfig
+import com.davay.android.core.domain.impl.CommonWebsocketInteractor
 import com.davay.android.core.domain.models.ErrorScreenState
 import com.davay.android.core.domain.models.Genre
 import com.davay.android.core.domain.models.converter.toSessionShort
@@ -20,10 +21,11 @@ import javax.inject.Inject
 
 class GenreViewModel @Inject constructor(
     private val getGenresUseCase: GetGenresUseCase,
-    private val createSessionUseCase: CreateSessionUseCase
-) : CreateSessionViewModel() {
+    private val createSessionUseCase: CreateSessionUseCase,
+    commonWebsocketInteractor: CommonWebsocketInteractor
+) : CreateSessionViewModel(commonWebsocketInteractor) {
     private val _state = MutableStateFlow<GenreState>(GenreState.Loading)
-    val state = _state.asStateFlow()
+    val genreState = _state.asStateFlow()
 
     private val selectedGenre = mutableListOf<GenreSelect>()
 
@@ -34,7 +36,7 @@ class GenreViewModel @Inject constructor(
     fun getGenreList() {
         _state.update { GenreState.Loading }
         runSafelyUseCase(
-            useCaseFlow = getGenresUseCase.execute(),
+            useCaseFlow = getGenresUseCase(),
             onSuccess = { genres ->
                 if (genres.isEmpty()) {
                     _state.update { GenreState.Error(ErrorScreenState.EMPTY) }
@@ -80,13 +82,15 @@ class GenreViewModel @Inject constructor(
                     GenreState.CreateSessionLoading
                 }
                 runSafelyUseCase(
-                    useCaseFlow = createSessionUseCase.execute(SessionType.GENRES, genreList),
+                    useCaseFlow = createSessionUseCase(SessionType.GENRES, genreList),
                     onSuccess = { session ->
                         if (BuildConfig.DEBUG) {
                             Log.v(TAG, "error -> $session")
                         }
-                        viewModelScope.launch(Dispatchers.Main) {
-                            navigateToWaitSession(session.toSessionShort())
+                        subscribeToWebsocketsAndUpdateSessionId(sessionId = session.id).also {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                navigateToWaitSession(session.toSessionShort())
+                            }
                         }
                     },
                     onFailure = { error ->
