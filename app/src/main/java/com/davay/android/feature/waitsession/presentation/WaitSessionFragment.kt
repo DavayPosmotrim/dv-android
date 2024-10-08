@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,6 +31,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSessionViewModel>(
@@ -44,7 +46,7 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
             title = getString(R.string.leave_wait_session_title),
             message = getString(R.string.leave_wait_session_dialog_message),
             yesAction = {
-                viewModel.navigateToCreateSession()
+                viewModel.navigateToCreateSessionAndUnsubscribeWebSockets()
             }
         )
     }
@@ -71,20 +73,7 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
     }
 
     override fun initViews() {
-        super.initViews()
-        userAdapter.setItems(
-            listOf(
-                "Артем",
-                "Руслан",
-                "Константин",
-                "Виктория"
-            ) // список юзеров нужно тянуть из сокета
-        )
         initRecycler()
-        session?.let { session ->
-            binding.tvCode.text = session.id
-            viewModel.subscribeWs(session.id)
-        }
     }
 
     override fun subscribe() {
@@ -100,6 +89,26 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
             if (it.isEnabled) {
                 sendCode(sessionId)
                 binding.sendButton.setButtonEnabled(false)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.state.collect { state ->
+                Log.i(TAG, "state: $state")
+                renderState(state)
+            }
+        }
+    }
+
+    private fun renderState(state: WaitSessionState) {
+        when (state) {
+            is WaitSessionState.Content -> {
+                userAdapter.setItems(state.users)
+                Log.i(TAG, "state.session: ${state.users}")
+            }
+
+            is WaitSessionState.Error -> {
+
             }
         }
     }
@@ -120,7 +129,7 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
         launcher = null
     }
 
-    private fun copyTextToClipboard(text: String) {
+    private fun copyTextToClipboard(text: String) { //! вынести логику во viewmodel
         val clipboard =
             requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(
@@ -135,7 +144,7 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
         )
     }
 
-    private fun sendCode(text: String) {
+    private fun sendCode(text: String) { //! вынести логику во viewmodel
         val part1 = getString(R.string.additional_message_part1)
         val part2 = getString(R.string.additional_message_part2)
         val combinedText = "$part1\n$part2 $text"
@@ -156,7 +165,7 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
             justifyContent = JustifyContent.FLEX_START
             alignItems = AlignItems.FLEX_START
         }
-        val spaceBetweenItems = SPACING_BETWEEN_RV_ITEMS_8_DP.dpToPx()
+        val spaceBetweenItems = SPACING_BETWEEN_RV_ITEMS_8_DP.dpToPx() //! не всегда срабатывает при добавлении новых юзеров к сессии и ообновлении списка
         binding.rvUser.apply {
             adapter = userAdapter
             layoutManager = flexboxLayoutManager
@@ -165,7 +174,7 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
     }
 
     private fun setButtonClickListeners() = with(binding) {
-        cancelButton.setOnDebouncedClickListener(coroutineScope = lifecycleScope) {
+        cancelButton.setOnDebouncedClickListener(coroutineScope = lifecycleScope) { // TODO добавить обновление статуса сессии
             dialog.show(parentFragmentManager, CUSTOM_DIALOG_TAG)
         }
         startSessionButton.setOnDebouncedClickListener(
@@ -173,7 +182,7 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
         ) {
             if (userAdapter.itemCount < MIN_USER_TO_START_2) {
                 updateAndShowBanner(
-                    getString(R.string.wait_session_min_two_user),
+                    getString(R.string.wait_session_min_two_users),
                     BannerView.ATTENTION
                 )
             } else {
@@ -193,5 +202,8 @@ class WaitSessionFragment : BaseFragment<FragmentWaitSessionBinding, WaitSession
         const val CUSTOM_DIALOG_TAG = "customDialog"
         const val MIN_USER_TO_START_2 = 2
         const val TEXT_TYPE = "text/plain"
+
+
+        val TAG = WaitSessionState::class.simpleName
     }
 }
