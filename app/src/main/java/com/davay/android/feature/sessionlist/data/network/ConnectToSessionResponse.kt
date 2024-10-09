@@ -1,5 +1,6 @@
 package com.davay.android.feature.sessionlist.data.network
 
+import com.davay.android.core.data.dto.ConnectMessageDto
 import com.davay.android.core.data.dto.SessionDto
 
 interface ConnectToSessionResponse {
