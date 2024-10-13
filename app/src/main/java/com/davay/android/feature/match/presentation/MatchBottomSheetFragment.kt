@@ -107,7 +107,7 @@ class MatchBottomSheetFragment(private val action: (() -> Unit)? = null) :
                             animationMatchDialog.animateBannerDrop(binding.tvBannerMatchWatch)
                         } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                             action?.invoke()
-                            dismiss()
+                            dismissAllowingStateLoss()
                         }
                     }
 
@@ -166,11 +166,11 @@ class MatchBottomSheetFragment(private val action: (() -> Unit)? = null) :
             animationMatchDialog.animateDialogDismiss(
                 bottomSheet
             ) {
-                dismiss()
+                dismissAllowingStateLoss()
                 action?.invoke()
             }
         } else {
-            dismiss()
+            dismissAllowingStateLoss()
         }
     }
 
