@@ -14,14 +14,14 @@ interface WebsocketRepository {
     val rouletteIdStateFlow: StateFlow<Result<Int, ErrorType>?>
     val matchesIdStateFlow: StateFlow<Result<Int, ErrorType>?>
 
-    fun subscribeUsers(sessionId: String): StateFlow<Result<List<User>, ErrorType>?>
+    suspend fun subscribeUsers(sessionId: String)
     suspend fun unsubscribeUsers()
-    fun subscribeSessionResult(sessionId: String): StateFlow<Result<Session, ErrorType>?>
+    suspend fun subscribeSessionResult(sessionId: String)
     suspend fun unsubscribeSessionResult()
-    fun subscribeSessionStatus(sessionId: String): StateFlow<Result<SessionStatus, ErrorType>?>
+    suspend fun subscribeSessionStatus(sessionId: String)
     suspend fun unsubscribeSessionStatus()
-    fun subscribeRouletteId(sessionId: String): StateFlow<Result<Int, ErrorType>?>
+    suspend fun subscribeRouletteId(sessionId: String)
     suspend fun unsubscribeRouletteId()
-    fun subscribeMatchesId(sessionId: String): StateFlow<Result<Int, ErrorType>?>
+    suspend fun subscribeMatchesId(sessionId: String)
     suspend fun unsubscribeMatchesId()
 }

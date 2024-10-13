@@ -1,6 +1,8 @@
 package com.davay.android.feature.createsession.di
 
 import android.content.Context
+import com.davay.android.core.data.MovieIdListToDbSaver
+import com.davay.android.core.data.MovieIdListToDbSaverImpl
 import com.davay.android.core.data.database.AppDatabase
 import com.davay.android.core.data.network.HttpKtorNetworkClient
 import com.davay.android.core.domain.api.UserDataRepository
@@ -28,12 +30,19 @@ class CreateSessionDataModule {
     fun provideCreateSessionRepository(
         httpNetworkClient: HttpKtorNetworkClient<CreateSessionRequest, CreateSessionResponse>,
         userDataRepository: UserDataRepository,
-        appDatabase: AppDatabase
+        appDatabase: AppDatabase,
+        movieIdListToDbSaver: MovieIdListToDbSaver
     ): CreateSessionRepository {
         return CreateSessionRepositoryImpl(
             httpNetworkClient,
             userDataRepository,
-            appDatabase.movieIdDao()
+            appDatabase.movieIdDao(),
+            movieIdListToDbSaver,
         )
+    }
+
+    @Provides
+    fun provideMovieIdListToDbSaver(): MovieIdListToDbSaver {
+        return MovieIdListToDbSaverImpl()
     }
 }

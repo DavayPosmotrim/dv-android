@@ -117,6 +117,32 @@ abstract class BaseViewModel : ViewModel() {
         }
     }
 
+    protected inline fun <reified D> runSafelyUseCaseWithNullResponse(
+        useCaseFlow: Flow<Result<D, ErrorType>?>,
+        noinline onFailure: ((ErrorType) -> Unit)? = null,
+        crossinline onSuccess: (D?) -> Unit,
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                useCaseFlow.collect { result ->
+                    when (result) {
+                        is Result.Success -> onSuccess(result.data)
+                        is Result.Error -> {
+                            onFailure?.invoke(result.error)
+                        }
+                        null -> onSuccess(null)
+                    }
+                }
+            }.onFailure { error ->
+                if (BuildConfig.DEBUG) {
+                    Log.v(BASE_VM_TAG, "error -> ${error.localizedMessage}")
+                    error.printStackTrace()
+                }
+                onFailure?.invoke(ErrorType.UNKNOWN_ERROR)
+            }
+        }
+    }
+
     companion object {
         val BASE_VM_TAG = BaseViewModel::class.simpleName
     }

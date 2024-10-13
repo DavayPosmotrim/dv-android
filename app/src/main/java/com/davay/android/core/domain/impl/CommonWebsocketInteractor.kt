@@ -14,58 +14,79 @@ import javax.inject.Singleton
 class CommonWebsocketInteractor @Inject constructor(
     private val websocketRepository: WebsocketRepository,
 ) {
-    fun subscribeSessionStatus(sessionId: String): StateFlow<Result<SessionStatus, ErrorType>?> {
-        return websocketRepository.subscribeSessionStatus(sessionId)
+    var sessionId: String? = null
+        private set
+
+    private suspend fun subscribeSessionStatus(sessionId: String) {
+        websocketRepository.subscribeSessionStatus(sessionId)
     }
 
-    suspend fun unsubscribeSessionStatus() {
+    private suspend fun unsubscribeSessionStatus() {
         websocketRepository.unsubscribeSessionStatus()
     }
 
     fun getSessionStatus(): StateFlow<Result<SessionStatus, ErrorType>?> =
         websocketRepository.sessionStatusStateFlow
 
-    fun subscribeUsers(sessionId: String): StateFlow<Result<List<User>, ErrorType>?> {
-        return websocketRepository.subscribeUsers(sessionId)
+    private suspend fun subscribeUsers(sessionId: String) {
+        websocketRepository.subscribeUsers(sessionId)
     }
 
-    suspend fun unsubscribeUsers() {
+    private suspend fun unsubscribeUsers() {
         websocketRepository.unsubscribeUsers()
     }
 
     fun getUsers(): StateFlow<Result<List<User>, ErrorType>?> =
         websocketRepository.usersStateFlow
 
-    fun subscribeSessionResult(sessionId: String): StateFlow<Result<Session, ErrorType>?> {
-        return websocketRepository.subscribeSessionResult(sessionId)
+    private suspend fun subscribeSessionResult(sessionId: String) {
+        websocketRepository.subscribeSessionResult(sessionId)
     }
 
-    suspend fun unsubscribeSessionResult() {
+    private suspend fun unsubscribeSessionResult() {
         websocketRepository.unsubscribeSessionResult()
     }
 
     fun getSessionResult(): StateFlow<Result<Session, ErrorType>?> =
         websocketRepository.sessionResultFlow
 
-    fun subscribeRouletteId(sessionId: String): StateFlow<Result<Int, ErrorType>?> {
-        return websocketRepository.subscribeRouletteId(sessionId)
+    private suspend fun subscribeRouletteId(sessionId: String) {
+        websocketRepository.subscribeRouletteId(sessionId)
     }
 
-    suspend fun unsubscribeRouletteId() {
+    private suspend fun unsubscribeRouletteId() {
         websocketRepository.unsubscribeRouletteId()
     }
 
     fun getRouletteId(): StateFlow<Result<Int, ErrorType>?> =
         websocketRepository.rouletteIdStateFlow
 
-    fun subscribeMatchesId(sessionId: String): StateFlow<Result<Int, ErrorType>?> {
-        return websocketRepository.subscribeMatchesId(sessionId)
+    private suspend fun subscribeMatchesId(sessionId: String) {
+        websocketRepository.subscribeMatchesId(sessionId)
     }
 
-    suspend fun unsubscribeMatchesId() {
+    private suspend fun unsubscribeMatchesId() {
         websocketRepository.unsubscribeMatchesId()
     }
 
     fun getMatchesId(): StateFlow<Result<Int, ErrorType>?> =
         websocketRepository.matchesIdStateFlow
+
+    suspend fun subscribeWebsockets(sessionId: String) {
+        this.sessionId = sessionId
+        subscribeSessionStatus(sessionId)
+        subscribeUsers(sessionId)
+        subscribeSessionResult(sessionId)
+        subscribeRouletteId(sessionId)
+        subscribeMatchesId(sessionId)
+    }
+
+    suspend fun unsubscribeWebsockets() {
+        this.sessionId = null
+        unsubscribeSessionStatus()
+        unsubscribeUsers()
+        unsubscribeSessionResult()
+        unsubscribeRouletteId()
+        unsubscribeMatchesId()
+    }
 }
