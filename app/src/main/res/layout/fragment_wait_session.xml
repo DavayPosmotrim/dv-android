@@ -7,6 +7,14 @@
     android:background="@color/background_base"
     tools:context=".feature.waitsession.presentation.WaitSessionFragment">
 
+    <com.davai.uikit.ErrorScreenView
+        android:id="@+id/error_screen"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_base"
+        android:elevation="@dimen/elevation_4" />
+
     <View
         android:id="@+id/view_top"
         android:layout_width="match_parent"

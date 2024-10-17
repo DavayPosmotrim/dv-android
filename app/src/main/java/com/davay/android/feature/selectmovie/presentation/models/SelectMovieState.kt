@@ -1,4 +1,4 @@
-package com.davay.android.feature.selectmovie.presentation
+package com.davay.android.feature.selectmovie.presentation.models
 
 import com.davay.android.core.domain.models.ErrorScreenState
 import com.davay.android.core.domain.models.MovieDetails

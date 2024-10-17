@@ -1,9 +1,9 @@
-package com.davay.android.feature.coincidences.data
+package com.davay.android.feature.waitsession.data.impl
 
 import com.davay.android.core.domain.lounchcontrol.api.FirstTimeFlagRepository
 import com.davay.android.core.domain.lounchcontrol.api.FirstTimeFlagStorage
 
-class CoincidencesRepositoryImpl(
+class WaitSessionOnBoardingRepositoryImpl(
     private val firstTimeFlagStorage: FirstTimeFlagStorage
 ) : FirstTimeFlagRepository {
     override fun isFirstTimeLaunch(): Boolean {

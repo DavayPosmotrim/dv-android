@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -61,7 +62,7 @@ class WebsocketRepositoryImpl @Inject constructor(
     override suspend fun subscribeUsers(sessionId: String) {
         repositoryScope.launch {
             subscribeUsersFlow(sessionId).collect { result ->
-                _usersStateFlow.value = result
+                _usersStateFlow.update { result }
             }
         }
     }
@@ -87,7 +88,7 @@ class WebsocketRepositoryImpl @Inject constructor(
     override suspend fun unsubscribeUsers() {
         runCatching {
             websocketUsersClient.close()
-            _usersStateFlow.value = null
+            _usersStateFlow.update { null }
         }.onFailure { error ->
             if (BuildConfig.DEBUG) {
                 error.printStackTrace()
@@ -98,7 +99,7 @@ class WebsocketRepositoryImpl @Inject constructor(
     override suspend fun subscribeSessionResult(sessionId: String) {
         repositoryScope.launch {
             subscribeSessionResultFlow(sessionId).collect { result ->
-                _sessionResultFlow.value = result
+                _sessionResultFlow.update { result }
             }
         }
     }
@@ -126,7 +127,7 @@ class WebsocketRepositoryImpl @Inject constructor(
     override suspend fun unsubscribeSessionResult() {
         runCatching {
             websocketSessionResultClient.close()
-            _sessionResultFlow.value = null
+            _sessionResultFlow.update { null }
         }.onFailure { error ->
             if (BuildConfig.DEBUG) {
                 error.printStackTrace()
@@ -164,8 +165,8 @@ class WebsocketRepositoryImpl @Inject constructor(
 
     override suspend fun unsubscribeSessionStatus() {
         runCatching {
-            _sessionStatusStateFlow.value = null
             websocketSessionStatusClient.close()
+            _sessionStatusStateFlow.update { null }
         }.onFailure { error ->
             if (BuildConfig.DEBUG) {
                 error.printStackTrace()
@@ -176,7 +177,7 @@ class WebsocketRepositoryImpl @Inject constructor(
     override suspend fun subscribeRouletteId(sessionId: String) {
         repositoryScope.launch {
             subscribeRouletteIdFlow(sessionId).collect { result ->
-                _rouletteIdStateFlow.value = result
+                _rouletteIdStateFlow.update { result }
             }
         }
     }
@@ -203,7 +204,7 @@ class WebsocketRepositoryImpl @Inject constructor(
 
     override suspend fun unsubscribeRouletteId() {
         runCatching {
-            _rouletteIdStateFlow.value = null
+            _rouletteIdStateFlow.update { null }
             websocketRouletteIdClient.close()
         }.onFailure { error ->
             if (BuildConfig.DEBUG) {
@@ -215,7 +216,7 @@ class WebsocketRepositoryImpl @Inject constructor(
     override suspend fun subscribeMatchesId(sessionId: String) {
         repositoryScope.launch {
             subscribeMatchesIdFlow(sessionId).collect { result ->
-                _matchesIdStateFlow.value = result
+                _matchesIdStateFlow.update { result }
             }
         }
     }
@@ -242,8 +243,8 @@ class WebsocketRepositoryImpl @Inject constructor(
 
     override suspend fun unsubscribeMatchesId() {
         runCatching {
-            _matchesIdStateFlow.value = null
             websocketMatchesIdClient.close()
+            _matchesIdStateFlow.update { null }
         }.onFailure { error ->
             if (BuildConfig.DEBUG) {
                 error.printStackTrace()

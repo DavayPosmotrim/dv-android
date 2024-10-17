@@ -27,14 +27,17 @@ class SessionListViewModel @Inject constructor(
 ) : BaseViewModel() {
     private val _state = MutableStateFlow<ConnectToSessionState>(ConnectToSessionState.Loading)
     val state = _state.asStateFlow()
-    private var sessionId: String? = null
+    private var sessionId: String = ""
 
     fun connectToSessionAuto(sessionId: String) {
-        if (this.sessionId == null) {
+        if (this.sessionId.isEmpty()) {
             connectToSession(sessionId)
         }
     }
 
+    /**
+     * Подключает к сессии и обновляет значение sessionId в commonWebsocketInteractor
+     */
     fun connectToSession(sessionId: String) {
         this.sessionId = sessionId
         _state.update { ConnectToSessionState.Loading }
@@ -42,7 +45,7 @@ class SessionListViewModel @Inject constructor(
             useCaseFlow = connectToSessionUseCase.execute(sessionId),
             onFailure = { error ->
                 _state.update { ConnectToSessionState.Error(mapErrorToUiState(error)) }
-                this.sessionId = null
+                this.sessionId = ""
             },
             onSuccess = { session ->
                 _state.update { ConnectToSessionState.Content(session) }
@@ -99,7 +102,7 @@ class SessionListViewModel @Inject constructor(
                         val bundle = Bundle().apply {
                             putString(SESSION_DATA, sessionJson)
                         }
-                        this@SessionListViewModel.sessionId = null
+                        this@SessionListViewModel.sessionId = ""
                         navigate(
                             R.id.action_sessionListFragment_to_selectMovieFragment,
                             bundle
@@ -129,11 +132,11 @@ class SessionListViewModel @Inject constructor(
         runSafelyUseCase(
             useCaseFlow = leaveSessionUseCase.execute(sessionId),
             onFailure = {
-                this.sessionId = null
+                this.sessionId = ""
                 navigateBack()
             },
             onSuccess = {
-                this.sessionId = null
+                this.sessionId = ""
                 navigateBack()
             }
         )

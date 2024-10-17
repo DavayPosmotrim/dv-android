@@ -9,7 +9,8 @@ import dagger.Component
     dependencies = [AppComponent::class],
     modules = [
         CoincidencesFragmentModule::class,
-        CoincidencesDataModule::class
+        CoincidencesDataModule::class,
+        CoincidencesDomainModule::class
     ]
 )
 @FragmentScope

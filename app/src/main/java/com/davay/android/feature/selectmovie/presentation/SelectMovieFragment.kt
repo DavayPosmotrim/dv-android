@@ -11,6 +11,7 @@ import com.davai.uikit.dialog.MainDialogFragment
 import com.davay.android.R
 import com.davay.android.base.BaseFragment
 import com.davay.android.core.domain.models.MovieDetails
+import com.davay.android.core.domain.models.SessionStatus
 import com.davay.android.databinding.FragmentSelectMovieBinding
 import com.davay.android.di.AppComponentHolder
 import com.davay.android.di.ScreenComponent
@@ -22,6 +23,8 @@ import com.davay.android.feature.selectmovie.presentation.adapters.SwipeCallback
 import com.davay.android.feature.selectmovie.presentation.adapters.SwipeableLayoutManager
 import com.davay.android.feature.selectmovie.presentation.animation.IncrementAnimation
 import com.davay.android.feature.selectmovie.presentation.animation.IncrementAnimationImpl
+import com.davay.android.feature.selectmovie.presentation.models.MovieMatchState
+import com.davay.android.feature.selectmovie.presentation.models.SelectMovieState
 import com.davay.android.utils.MovieDetailsHelperImpl
 import com.davay.android.utils.presentation.UiErrorHandler
 import com.davay.android.utils.presentation.UiErrorHandlerImpl
@@ -98,6 +101,22 @@ class SelectMovieFragment :
                 renderState(state)
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.matchState.collect { state ->
+                handleMovieMatchState(state)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.sessionStatusState.collect { state ->
+                when (state) {
+                    SessionStatus.CLOSED -> showConfirmDialogAtSessionClosedStatus()
+                    SessionStatus.ROULETTE -> showConfirmDialogAndNavigateToRoulette()
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun renderState(state: SelectMovieState) {
@@ -106,6 +125,13 @@ class SelectMovieFragment :
             is SelectMovieState.Content -> showContent(state)
             is SelectMovieState.Error -> handleError(state)
             is SelectMovieState.ListIsFinished -> showDialogAndRequestResetMovieList()
+        }
+    }
+
+    private fun handleMovieMatchState(state: MovieMatchState) {
+        when (state) {
+            is MovieMatchState.Empty -> {}
+            is MovieMatchState.Content -> showBottomSheetFragment(state.movieDetails)
         }
     }
 
@@ -178,8 +204,7 @@ class SelectMovieFragment :
             title = getString(R.string.leave_session_title),
             message = getString(R.string.select_movies_leave_session_dialog_message),
             yesAction = {
-                viewModel.disconnect()
-                viewModel.clearBackStackToMainAndNavigate(R.id.action_mainFragment_to_matchedSessionListFragment)
+                viewModel.leaveSessionAndNavigateToHistory()
             }
         )
         dialog.show(parentFragmentManager, null)
@@ -196,7 +221,37 @@ class SelectMovieFragment :
             message = getString(R.string.leave_session_dialog_message_session_complited),
             showConfirmBlock = true,
             yesAction = {
-                viewModel.clearBackStackToMainAndNavigate(R.id.action_mainFragment_to_matchedSessionListFragment)
+                viewModel.leaveSessionAndNavigateToHistory()
+            }
+        )
+        dialog.show(parentFragmentManager, null)
+    }
+
+    private fun showConfirmDialogAtSessionClosedStatus() {
+        val dialog = MainDialogFragment.newInstance(
+            title = getString(R.string.select_movies_session_is_closed),
+            message = getString(R.string.select_movies_user_left_session),
+            showConfirmBlock = true,
+            yesAction = {
+                viewModel.leaveSessionAndNavigateToHistory()
+            },
+            onCancelAction = {
+                viewModel.leaveSessionAndNavigateToHistory()
+            }
+        )
+        dialog.show(parentFragmentManager, null)
+    }
+
+    private fun showConfirmDialogAndNavigateToRoulette() {
+        val dialog = MainDialogFragment.newInstance(
+            title = getString(R.string.select_movies_roulette_is_running_title),
+            message = getString(R.string.select_movies_roulette_is_running_message),
+            showConfirmBlock = true,
+            yesAction = {
+                viewModel.navigate(R.id.action_coincidencesFragment_to_rouletteFragment)
+            },
+            onCancelAction = {
+                viewModel.navigate(R.id.action_coincidencesFragment_to_rouletteFragment)
             }
         )
         dialog.show(parentFragmentManager, null)
@@ -345,9 +400,11 @@ class SelectMovieFragment :
 
     /**
      * Использовать метод в событиях мэтча в вэбсокете
+     * В action передаем изменение стэйта MovieMatchState в Empty
      */
     @Suppress("Detekt.UnusedPrivateMember")
     private fun showBottomSheetFragment(movie: MovieDetails) {
+        viewModel.emptyMovieMatchState()
         val movieDetails = Json.encodeToString(movie)
         val bottomSheetFragment = MatchBottomSheetFragment.newInstance(
             movieDetails,
