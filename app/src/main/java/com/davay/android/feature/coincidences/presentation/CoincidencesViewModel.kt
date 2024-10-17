@@ -95,8 +95,10 @@ class CoincidencesViewModel @Inject constructor(
             commonWebsocketInteractor.getSessionStatus().collect { result ->
                 when (result) {
                     is Result.Success -> {
-                        _sessionStatusState.update {
-                            result.data
+                        if (_sessionStatusState.value != SessionStatus.ROULETTE) {
+                            _sessionStatusState.update {
+                                result.data
+                            }
                         }
                     }
 

@@ -248,10 +248,10 @@ class SelectMovieFragment :
             message = getString(R.string.select_movies_roulette_is_running_message),
             showConfirmBlock = true,
             yesAction = {
-                viewModel.navigate(R.id.action_coincidencesFragment_to_rouletteFragment)
+                viewModel.navigate(R.id.action_selectMovieFragment_to_rouletteFragment)
             },
             onCancelAction = {
-                viewModel.navigate(R.id.action_coincidencesFragment_to_rouletteFragment)
+                viewModel.navigate(R.id.action_selectMovieFragment_to_rouletteFragment)
             }
         )
         dialog.show(parentFragmentManager, null)
