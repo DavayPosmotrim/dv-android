@@ -4,9 +4,9 @@ import com.davay.android.BuildConfig
 import com.davay.android.core.data.converters.toDbEntity
 import com.davay.android.core.data.converters.toDomain
 import com.davay.android.core.data.database.HistoryDao
+import com.davay.android.core.data.database.entity.MovieDetailsEntity
 import com.davay.android.core.domain.api.SessionsHistoryRepository
 import com.davay.android.core.domain.models.ErrorType
-import com.davay.android.core.domain.models.MovieDetails
 import com.davay.android.core.domain.models.Result
 import com.davay.android.core.domain.models.Session
 import com.davay.android.core.domain.models.SessionWithMovies
@@ -16,15 +16,14 @@ class SessionsHistoryRepositoryImpl @Inject constructor(
     private val historyDao: HistoryDao
 ) : SessionsHistoryRepository {
 
-    override suspend fun saveSessionsHistory(
-        session: Session,
-        movies: List<MovieDetails>
-    ): Result<Unit, ErrorType> =
+    override suspend fun saveSessionsHistory(session: Session): Result<Unit, ErrorType> =
         @Suppress("TooGenericExceptionCaught", "PrintStackTrace")
         try {
+            val movies: List<MovieDetailsEntity> =
+                session.matchedMovieIdList.mapNotNull { historyDao.getMovieDetailsById(it) }
             historyDao.saveSessionWithFilms(
                 session.toDbEntity(),
-                movies.map { it.toDbEntity() }
+                movies
             )
             Result.Success(Unit)
         } catch (e: Exception) {

@@ -11,6 +11,7 @@ import com.davay.android.core.data.network.model.NetworkParams.PATH_ROULETTE
 import com.davay.android.core.data.network.model.NetworkParams.PATH_SESSION_RESULT
 import com.davay.android.core.data.network.model.NetworkParams.PATH_SESSION_STATUS
 import com.davay.android.core.data.network.model.NetworkParams.PATH_USERS
+import com.davay.android.core.domain.api.SessionsHistoryRepository
 import com.davay.android.core.domain.api.UserDataRepository
 import com.davay.android.core.domain.api.WebsocketRepository
 import com.davay.android.core.domain.models.ErrorType
@@ -31,7 +32,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@Suppress("LargeClass")
+@Suppress("LargeClass", "LongParameterList")
 class WebsocketRepositoryImpl @Inject constructor(
     private val websocketUsersClient: WebsocketNetworkClient<List<UserDto>?>,
     private val websocketSessionResultClient: WebsocketNetworkClient<SessionResultDto?>,
@@ -39,6 +40,7 @@ class WebsocketRepositoryImpl @Inject constructor(
     @RouletteIdClient private val websocketRouletteIdClient: WebsocketNetworkClient<Int?>,
     @MatchesIdClient private val websocketMatchesIdClient: WebsocketNetworkClient<Int?>,
     private val userDataRepository: UserDataRepository,
+    private val sessionsHistoryRepository: SessionsHistoryRepository,
 ) : WebsocketRepository {
 
     private val deviceId = userDataRepository.getUserId()
@@ -111,7 +113,9 @@ class WebsocketRepositoryImpl @Inject constructor(
                 websocketSessionResultClient.subscribe(deviceId, "$sessionId$PATH_SESSION_RESULT")
                     .collect { sessionResult ->
                         if (sessionResult != null) {
-                            emit(Result.Success(sessionResult.toDomain()))
+                            val session = sessionResult.toDomain()
+                            sessionsHistoryRepository.saveSessionsHistory(session)
+                            emit(Result.Success(session))
                         } else {
                             emit(Result.Error(ErrorType.UNKNOWN_ERROR))
                         }

@@ -1,7 +1,6 @@
 package com.davay.android.di
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.davay.android.core.data.dto.SessionResultDto
 import com.davay.android.core.data.dto.SessionStatusDto
 import com.davay.android.core.data.dto.UserDto
@@ -12,6 +11,7 @@ import com.davay.android.core.data.network.WebsocketNetworkClient
 import com.davay.android.core.data.network.WebsocketSessionResultClient
 import com.davay.android.core.data.network.WebsocketSessionStatusClient
 import com.davay.android.core.data.network.WebsocketUsersClient
+import com.davay.android.core.domain.api.SessionsHistoryRepository
 import com.davay.android.core.domain.api.UserDataRepository
 import com.davay.android.core.domain.api.WebsocketRepository
 import com.davay.android.core.domain.impl.CommonWebsocketInteractor
@@ -61,6 +61,7 @@ class CommonWebsocketModule {
         @RouletteIdClient websocketRouletteIdClient: WebsocketNetworkClient<Int?>,
         @MatchesIdClient websocketMatchesIdClient: WebsocketNetworkClient<Int?>,
         userDataRepository: UserDataRepository,
+        sessionsHistoryRepository: SessionsHistoryRepository,
     ): WebsocketRepository {
         return WebsocketRepositoryImpl(
             websocketUsersClient,
@@ -69,7 +70,8 @@ class CommonWebsocketModule {
             websocketRouletteIdClient,
             websocketMatchesIdClient,
             userDataRepository,
-        ).also { Log.d("MyTag", it.toString()) }
+            sessionsHistoryRepository,
+        )
     }
 
     @Provides
@@ -85,7 +87,7 @@ class CommonWebsocketModule {
     ): CommonWebsocketInteractor {
         return CommonWebsocketInteractor(
             websocketRepository
-        ).also { Log.d("MyTag", it.toString()) }
+        )
     }
 }
 
