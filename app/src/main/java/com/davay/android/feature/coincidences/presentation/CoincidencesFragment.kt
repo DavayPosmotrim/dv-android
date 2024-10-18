@@ -2,7 +2,6 @@ package com.davay.android.feature.coincidences.presentation
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -13,8 +12,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.davai.uikit.BannerView
+import com.davai.uikit.dialog.MainDialogFragment
 import com.davay.android.R
 import com.davay.android.base.BaseFragment
+import com.davay.android.core.domain.models.SessionStatus
 import com.davay.android.core.presentation.LastItemDecorator
 import com.davay.android.core.presentation.MainActivity
 import com.davay.android.databinding.FragmentCoincidencesBinding
@@ -25,6 +26,8 @@ import com.davay.android.feature.coincidences.di.DaggerCoincidencesFragmentCompo
 import com.davay.android.feature.coincidences.presentation.adapter.MoviesGridAdapter
 import com.davay.android.feature.moviecard.presentation.MovieCardFragment
 import com.davay.android.feature.roulette.presentation.RouletteFragment.Companion.ROULETTE_INITIATOR
+import com.davay.android.utils.presentation.UiErrorHandler
+import com.davay.android.utils.presentation.UiErrorHandlerImpl
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
@@ -35,6 +38,8 @@ class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, Coinciden
 ) {
 
     override val viewModel: CoincidencesViewModel by injectViewModel<CoincidencesViewModel>()
+
+    private val errorHandler: UiErrorHandler = UiErrorHandlerImpl()
 
     private val moviesGridAdapter = MoviesGridAdapter(lifecycleScope) { movieDetails ->
         val movie = Json.encodeToString(movieDetails)
@@ -126,7 +131,7 @@ class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, Coinciden
         binding.toolbarView.apply {
             hideMatchesCounter()
             setEndIconClickListener {
-                val coincidences = viewModel.getCoincidencesCount()
+                val coincidences = moviesGridAdapter.itemCount
                 if (coincidences >= MIN_COINCIDENCES_FOR_NAVIGATION_3) {
                     val bundle = Bundle().apply {
                         putBoolean(ROULETTE_INITIATOR, true)
@@ -155,31 +160,77 @@ class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, Coinciden
                 }
             }
         }
-    }
 
-    private fun handleState(state: UiState) {
-        when (state) {
-            is UiState.Empty -> updateVisibility(emptyMessageIsVisible = true)
-            is UiState.Loading -> updateVisibility(progressBarIsVisible = true)
-            is UiState.Data -> {
-                updateVisibility(coincidencesListIsVisible = true)
-                moviesGridAdapter.setData(state.data)
-            }
-
-            is UiState.Error -> {
-                Toast.makeText(requireContext(), "Error occurred!", Toast.LENGTH_SHORT).show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.sessionStatusState.collect { state ->
+                when (state) {
+                    SessionStatus.CLOSED -> showConfirmDialogAtSessionClosedStatus()
+                    SessionStatus.ROULETTE -> showConfirmDialogAndNavigateToRoulette()
+                    else -> {}
+                }
             }
         }
     }
 
-    private fun updateVisibility(
-        progressBarIsVisible: Boolean = false,
-        coincidencesListIsVisible: Boolean = false,
-        emptyMessageIsVisible: Boolean = false
-    ) = with(binding) {
-        progressBar.isVisible = progressBarIsVisible
-        coincidencesList.isVisible = coincidencesListIsVisible
-        emptyPlaceholder.root.isVisible = emptyMessageIsVisible
+    private fun showConfirmDialogAtSessionClosedStatus() {
+        val dialog = MainDialogFragment.newInstance(
+            title = getString(R.string.select_movies_session_is_closed),
+            message = getString(R.string.select_movies_user_left_session),
+            showConfirmBlock = true,
+            yesAction = {
+                viewModel.leaveSessionAndNavigateToHistory()
+            },
+            onCancelAction = {
+                viewModel.leaveSessionAndNavigateToHistory()
+            }
+        )
+        dialog.show(parentFragmentManager, null)
+    }
+
+    private fun showConfirmDialogAndNavigateToRoulette() {
+        val dialog = MainDialogFragment.newInstance(
+            title = getString(R.string.select_movies_roulette_is_running_title),
+            message = getString(R.string.select_movies_roulette_is_running_message),
+            showConfirmBlock = true,
+            yesAction = {
+                viewModel.navigate(R.id.action_coincidencesFragment_to_rouletteFragment)
+            },
+            onCancelAction = {
+                viewModel.navigate(R.id.action_coincidencesFragment_to_rouletteFragment)
+            }
+        )
+        dialog.show(parentFragmentManager, null)
+    }
+
+    private fun handleState(state: CoincidencesState) {
+        when (state) {
+            is CoincidencesState.Loading -> showProgressBar()
+            is CoincidencesState.Content -> showContent(state)
+            is CoincidencesState.Error -> showError(state)
+        }
+    }
+
+    private fun showProgressBar() = with(binding) {
+        progressBar.isVisible = true
+        coincidencesList.isVisible = false
+        errorScreen.isVisible = false
+    }
+
+
+    private fun showContent(content: CoincidencesState.Content) = with(binding) {
+        progressBar.isVisible = false
+        coincidencesList.isVisible = true
+        errorScreen.isVisible = false
+        moviesGridAdapter.setData(content.data)
+    }
+
+    private fun showError(error: CoincidencesState.Error) = with(binding) {
+        progressBar.isVisible = false
+        coincidencesList.isVisible = false
+        errorScreen.isVisible = true
+        errorHandler.handleError(error.errorType, errorScreen) {
+            viewModel.getCoincidences()
+        }
     }
 
     private fun showBottomSheetDialogFragment() {

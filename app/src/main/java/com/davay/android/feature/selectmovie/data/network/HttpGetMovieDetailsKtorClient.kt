@@ -2,6 +2,8 @@ package com.davay.android.feature.selectmovie.data.network
 
 import android.content.Context
 import com.davay.android.core.data.network.HttpKtorNetworkClient
+import com.davay.android.feature.selectmovie.data.network.models.GetMovieRequest
+import com.davay.android.feature.selectmovie.data.network.models.GetMovieResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

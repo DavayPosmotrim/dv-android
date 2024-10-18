@@ -9,7 +9,7 @@ import dagger.Component
     dependencies = [AppComponent::class],
     modules = [
         SelectMovieDataModule::class,
-        SelectMovieUseCaseModule::class,
+        SelectMovieDomainModule::class,
         SelectMovieFragmentModule::class
     ]
 )

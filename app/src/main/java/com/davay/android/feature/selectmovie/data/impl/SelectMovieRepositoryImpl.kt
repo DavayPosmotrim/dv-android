@@ -1,4 +1,4 @@
-package com.davay.android.feature.selectmovie.data
+package com.davay.android.feature.selectmovie.data.impl
 
 import android.database.sqlite.SQLiteException
 import android.util.Log
@@ -13,8 +13,8 @@ import com.davay.android.core.data.network.model.mapToErrorType
 import com.davay.android.core.domain.models.ErrorType
 import com.davay.android.core.domain.models.MovieDetails
 import com.davay.android.core.domain.models.Result
-import com.davay.android.feature.selectmovie.data.network.GetMovieRequest
-import com.davay.android.feature.selectmovie.data.network.GetMovieResponse
+import com.davay.android.feature.selectmovie.data.network.models.GetMovieRequest
+import com.davay.android.feature.selectmovie.data.network.models.GetMovieResponse
 import com.davay.android.feature.selectmovie.domain.api.SelectMovieRepository
 import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.Deferred
@@ -155,7 +155,10 @@ class SelectMovieRepositoryImpl @Inject constructor(
      */
     override suspend fun updateIsLikedByPosition(position: Int, isLiked: Boolean) {
         try {
-            movieIdDao.updateIsLikedById(position, isLiked)
+            movieIdDao.updateIsLikedById(position - 1, isLiked)
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "updateIsLikedByPosition position = $position")
+            }
         } catch (e: SQLiteException) {
             if (BuildConfig.DEBUG) {
                 Log.e(
@@ -163,6 +166,20 @@ class SelectMovieRepositoryImpl @Inject constructor(
                     "Error update Liked in movie position: $position, exception -> ${e.localizedMessage}"
                 )
             }
+        }
+    }
+
+    override suspend fun getMovieDetailsById(movieId: Int): MovieDetails? {
+        return try {
+            historyDao.getMovieDetailsById(movieId)?.toDomain()
+        } catch (e: SQLiteException) {
+            if (BuildConfig.DEBUG) {
+                Log.e(
+                    TAG,
+                    "Error get movie details by id: $movieId, exception -> ${e.localizedMessage}"
+                )
+            }
+            null
         }
     }
 

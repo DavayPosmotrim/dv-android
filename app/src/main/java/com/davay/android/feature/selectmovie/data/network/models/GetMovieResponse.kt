@@ -1,4 +1,4 @@
-package com.davay.android.feature.selectmovie.data.network
+package com.davay.android.feature.selectmovie.data.network.models
 
 import com.davay.android.core.data.dto.MovieDetailsDto
 

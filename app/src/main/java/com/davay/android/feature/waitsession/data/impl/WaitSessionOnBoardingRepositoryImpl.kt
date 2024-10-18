@@ -1,4 +1,4 @@
-package com.davay.android.feature.waitsession.data
+package com.davay.android.feature.waitsession.data.impl
 
 import com.davay.android.core.domain.lounchcontrol.api.FirstTimeFlagRepository
 import com.davay.android.core.domain.lounchcontrol.api.FirstTimeFlagStorage
