@@ -28,6 +28,26 @@ class SessionConnectionBottomSheetFragment :
 
     override val viewModel: SessionConnectionViewModel by injectViewModel<SessionConnectionViewModel>()
 
+    private val bottomSheetCallback by lazy {
+        object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    showSoftKeyboard(binding.etCode)
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                if (slideOffset < BOTTOM_SHEET_HIDE_PERCENT_60) {
+                    binding?. etCode?.let {
+                        hideKeyboard(it)
+                    }
+                    bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+            }
+        }
+    }
+
     override fun diComponent(): ScreenComponent = DaggerSessionConnectionFragmentComponent.builder()
         .appComponent(AppComponentHolder.getComponent())
         .build()
@@ -75,23 +95,7 @@ class SessionConnectionBottomSheetFragment :
         })
 
         bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-        bottomSheetBehavior?.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    showSoftKeyboard(binding.etCode)
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if (slideOffset < BOTTOM_SHEET_HIDE_PERCENT_60) {
-                    binding?. etCode?.let {
-                        hideKeyboard(it)
-                    }
-                    bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
-                }
-            }
-        })
+        bottomSheetBehavior?.addBottomSheetCallback(bottomSheetCallback)
     }
 
     private fun setupEditText() {
@@ -154,6 +158,11 @@ class SessionConnectionBottomSheetFragment :
             )
             bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
         }
+    }
+
+    override fun onDestroyView() {
+        bottomSheetBehavior?.removeBottomSheetCallback(bottomSheetCallback)
+        super.onDestroyView()
     }
 
     companion object {

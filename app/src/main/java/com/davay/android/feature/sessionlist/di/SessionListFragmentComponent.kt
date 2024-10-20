@@ -7,7 +7,11 @@ import dagger.Component
 
 @Component(
     dependencies = [AppComponent::class],
-    modules = [SessionListFragmentModule::class]
+    modules = [
+        SessionListDataModule::class,
+        SessionListUseCaseModule::class,
+        SessionListFragmentModule::class
+    ]
 )
 @FragmentScope
 interface SessionListFragmentComponent : ScreenComponent {

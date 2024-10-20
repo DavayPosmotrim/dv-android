@@ -177,11 +177,7 @@ class SelectMovieViewModel @Inject constructor(
 
     fun disconnect() {
         viewModelScope.launch(Dispatchers.IO) {
-            commonWebsocketInteractor.unsubscribeUsers()
-            commonWebsocketInteractor.unsubscribeRouletteId()
-            commonWebsocketInteractor.unsubscribeMatchesId()
-            commonWebsocketInteractor.unsubscribeSessionResult()
-            commonWebsocketInteractor.unsubscribeSessionStatus()
+            commonWebsocketInteractor.unsubscribeWebsockets()
         }
     }
 }
