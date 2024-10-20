@@ -2,21 +2,24 @@ package com.davay.android.feature.coincidences.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.davay.android.core.data.database.AppDatabase
+import com.davay.android.core.data.impl.GetMatchesRepositoryIml
+import com.davay.android.core.data.impl.UserDataRepositoryImpl
+import com.davay.android.core.data.network.HttpGetMatchesKtorClient
+import com.davay.android.core.data.network.HttpKtorNetworkClient
+import com.davay.android.core.data.network.model.getmatches.GetSessionRequest
+import com.davay.android.core.data.network.model.getmatches.GetSessionResponse
+import com.davay.android.core.domain.api.GetMatchesRepository
+import com.davay.android.core.domain.api.UserDataRepository
 import com.davay.android.core.domain.lounchcontrol.api.FirstTimeFlagRepository
 import com.davay.android.core.domain.lounchcontrol.api.FirstTimeFlagStorage
-import com.davay.android.core.domain.mockdata.api.GetData
-import com.davay.android.core.domain.models.ErrorType
-import com.davay.android.core.domain.models.MovieDetails
-import com.davay.android.feature.coincidences.data.CoincidencesRepositoryImpl
+import com.davay.android.di.prefs.marker.StorageMarker
+import com.davay.android.di.prefs.model.PreferencesStorage
 import com.davay.android.feature.coincidences.data.CoincidencesStorageImpl
-import com.davay.android.feature.coincidences.data.TestMovieRepository
-import com.davay.android.feature.coincidences.domain.CoincidencesInteractor
-import com.davay.android.feature.coincidences.domain.CoincidencesInteractorImpl
+import com.davay.android.feature.coincidences.data.impl.CoincidencesRepositoryImpl
 import dagger.Module
 import dagger.Provides
-import javax.inject.Named
-
-const val GET_TEST_MOVIE_USE_CASE = "GET_TEST_MOVIE_USE_CASE"
+import io.ktor.client.HttpClient
 
 @Module
 class CoincidencesDataModule {
@@ -33,20 +36,33 @@ class CoincidencesDataModule {
         )
 
     @Provides
-    fun provideCoincidencesRepository(
-        firstTimeFlagStorage: FirstTimeFlagStorage
-    ): FirstTimeFlagRepository = CoincidencesRepositoryImpl(firstTimeFlagStorage)
+    fun provideUserDataRepository(
+        @StorageMarker(PreferencesStorage.USER)
+        storage: SharedPreferences
+    ): UserDataRepository = UserDataRepositoryImpl(storage)
 
     @Provides
-    fun provideCoincidencesInteractor(
-        repository: FirstTimeFlagRepository
-    ): CoincidencesInteractor = CoincidencesInteractorImpl(repository)
+    fun provideGetSessionHttpNetworkClient(
+        context: Context,
+        httpClient: HttpClient
+    ): HttpKtorNetworkClient<GetSessionRequest, GetSessionResponse> {
+        return HttpGetMatchesKtorClient(context, httpClient)
+    }
 
     @Provides
-    fun testMovieRepository(context: Context): TestMovieRepository =
-        TestMovieRepository(context = context)
+    fun provideFirstTimeFlagRepository(firstTimeFlagStorage: FirstTimeFlagStorage): FirstTimeFlagRepository =
+        CoincidencesRepositoryImpl(firstTimeFlagStorage)
 
     @Provides
-    @Named(GET_TEST_MOVIE_USE_CASE)
-    fun getTestMovieUseCase(repo: TestMovieRepository): GetData<MovieDetails, ErrorType> = repo
+    fun provideGetMatchesRepository(
+        userDataRepository: UserDataRepository,
+        httpNetworkClient: HttpKtorNetworkClient<GetSessionRequest, GetSessionResponse>,
+        appDatabase: AppDatabase
+    ): GetMatchesRepository {
+        return GetMatchesRepositoryIml(
+            userDataRepository,
+            httpNetworkClient,
+            appDatabase.historyDao()
+        )
+    }
 }

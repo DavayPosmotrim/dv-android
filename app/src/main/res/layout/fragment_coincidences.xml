@@ -96,10 +96,12 @@
             tools:itemCount="2"
             tools:listitem="@layout/movie_card_view" />
 
-        <include
-            android:id="@+id/empty_placeholder"
-            layout="@layout/item_empty_placeholder"
-            android:visibility="visible" />
+        <com.davai.uikit.ErrorScreenView
+            android:id="@+id/error_screen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_gravity="center" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

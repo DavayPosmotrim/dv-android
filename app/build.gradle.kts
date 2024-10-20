@@ -40,6 +40,10 @@ android {
         viewBinding = true
         buildConfig = true
     }
+
+    kotlin {
+        jvmToolchain(JavaVersion.valueOf(libs.versions.java.get()).majorVersion.toInt())
+    }
 }
 
 dependencies {

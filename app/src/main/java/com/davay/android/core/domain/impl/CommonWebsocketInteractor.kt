@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class CommonWebsocketInteractor @Inject constructor(
     private val websocketRepository: WebsocketRepository,
 ) {
-    var sessionId: String? = null
+    var sessionId: String = ""
         private set
 
     private suspend fun subscribeSessionStatus(sessionId: String) {
@@ -82,11 +82,15 @@ class CommonWebsocketInteractor @Inject constructor(
     }
 
     suspend fun unsubscribeWebsockets() {
-        this.sessionId = null
+        this.sessionId = ""
         unsubscribeSessionStatus()
         unsubscribeUsers()
         unsubscribeSessionResult()
         unsubscribeRouletteId()
         unsubscribeMatchesId()
+    }
+
+    private companion object {
+        val TAG = CommonWebsocketInteractor::class.simpleName
     }
 }

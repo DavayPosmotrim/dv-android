@@ -1,4 +1,4 @@
-package com.davay.android.feature.selectmovie.data.network
+package com.davay.android.feature.selectmovie.data.network.models
 
 sealed interface GetMovieRequest {
     val path: String

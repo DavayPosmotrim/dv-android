@@ -1,61 +1,122 @@
 package com.davay.android.feature.coincidences.presentation
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.davay.android.BuildConfig
+import com.davay.android.R
 import com.davay.android.base.BaseViewModel
-import com.davay.android.core.domain.mockdata.api.GetData
-import com.davay.android.core.domain.models.ErrorType
-import com.davay.android.core.domain.models.MovieDetails
-import com.davay.android.feature.coincidences.di.GET_TEST_MOVIE_USE_CASE
-import com.davay.android.feature.coincidences.domain.CoincidencesInteractor
+import com.davay.android.core.domain.impl.CommonWebsocketInteractor
+import com.davay.android.core.domain.impl.GetMatchesUseCase
+import com.davay.android.core.domain.impl.LeaveSessionUseCase
+import com.davay.android.core.domain.models.ErrorScreenState
+import com.davay.android.core.domain.models.Result
+import com.davay.android.core.domain.models.SessionStatus
+import com.davay.android.feature.coincidences.domain.api.CoincidencesInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 class CoincidencesViewModel @Inject constructor(
-    @Named(GET_TEST_MOVIE_USE_CASE)
-    private val getData: GetData<MovieDetails, ErrorType>,
-    private val coincidencesInteractor: CoincidencesInteractor
+    private val coincidencesInteractor: CoincidencesInteractor,
+    private val getMatchesUseCase: GetMatchesUseCase,
+    private val commonWebsocketInteractor: CommonWebsocketInteractor,
+    private val leaveSessionUseCase: LeaveSessionUseCase
 ) : BaseViewModel() {
 
-    private val _state: MutableStateFlow<UiState> = MutableStateFlow(UiState.Empty)
-    val state = _state.asStateFlow()
+    private val _state: MutableStateFlow<CoincidencesState> =
+        MutableStateFlow(CoincidencesState.Loading)
+    val state
+        get() = _state.asStateFlow()
+
+    private val _sessionStatusState = MutableStateFlow(SessionStatus.VOTING)
+    val sessionStatusState
+        get() = _sessionStatusState.asStateFlow()
 
     init {
         getCoincidences()
+        subscribeSessionStatus()
     }
 
-    private fun getCoincidences() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _state.emit(UiState.Loading)
-
-            getData.getData().fold(
-                onSuccess = { movies ->
-                    _state.value =
-                        if (movies.isEmpty()) UiState.Empty else UiState.Data(data = movies)
-                },
-                onError = { errorType ->
-                    _state.value = UiState.Error(errorType)
+    fun getCoincidences() {
+        runSafelyUseCase(
+            useCaseFlow = getMatchesUseCase(),
+            onSuccess = { movieList ->
+                if (movieList.isEmpty()) {
+                    _state.update {
+                        CoincidencesState.Error(ErrorScreenState.EMPTY)
+                    }
+                } else {
+                    _state.update {
+                        CoincidencesState.Content(movieList)
+                    }
                 }
-            )
-        }
+            },
+            onFailure = { error ->
+                _state.update {
+                    CoincidencesState.Error(mapErrorToUiState(error))
+                }
+            }
+        )
     }
 
-    @Suppress("Detekt.FunctionOnlyReturningConstant")
     fun isFirstTimeLaunch(): Boolean = coincidencesInteractor.isFirstTimeLaunch()
 
     fun markFirstTimeLaunch() {
         coincidencesInteractor.markFirstTimeLaunch()
     }
 
-    fun getCoincidencesCount(): Int {
-        val currentState = _state.value
-        return if (currentState is UiState.Data) {
-            currentState.data.size
-        } else {
-            0
+
+    fun leaveSessionAndNavigateToHistory() {
+        disconnect()
+        clearBackStackToMainAndNavigate(R.id.action_mainFragment_to_matchedSessionListFragment)
+    }
+
+    private fun disconnect() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val sessionId = commonWebsocketInteractor.sessionId
+            runSafelyUseCase(
+                useCaseFlow = leaveSessionUseCase.execute(sessionId),
+                onSuccess = {},
+                onFailure = { error ->
+                    if (BuildConfig.DEBUG) {
+                        Log.e(TAG, "Error on leave session $sessionId, error -> $error")
+                    }
+                }
+            )
+            commonWebsocketInteractor.unsubscribeWebsockets()
         }
+    }
+
+    private fun subscribeSessionStatus() {
+        viewModelScope.launch(Dispatchers.IO) {
+            commonWebsocketInteractor.getSessionStatus().collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _sessionStatusState.update {
+                            result.data
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _sessionStatusState.update {
+                            SessionStatus.VOTING
+                        }
+                    }
+
+                    null -> {
+                        _sessionStatusState.update {
+                            SessionStatus.VOTING
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private companion object {
+        val TAG = CoincidencesViewModel::class.simpleName
     }
 }

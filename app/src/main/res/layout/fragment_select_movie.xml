@@ -47,9 +47,11 @@
             style="@style/Text.Headline.SubTitle.NoLineSpacing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:elevation="@dimen/elevation_4"
             android:layout_marginEnd="@dimen/margin_8"
             android:textColor="@color/primary_hover"
-            android:visibility="invisible"
+            android:text="@string/select_movies_increment_1"
             app:layout_constraintBottom_toBottomOf="@id/toolbarview_header"
             app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible" />
