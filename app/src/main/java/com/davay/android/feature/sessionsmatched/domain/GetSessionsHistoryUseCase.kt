@@ -8,6 +8,6 @@ class GetSessionsHistoryUseCase @Inject constructor(
     private val repository: SessionsHistoryRepository
 ) {
     suspend fun execute(): List<Session>? {
-        return repository.getSessionsHistory()
+        return repository.getSessionsHistory()?.reversed()
     }
 }

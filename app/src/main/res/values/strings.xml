@@ -151,6 +151,7 @@
     <string name="roulette_description_1"><b>Из всех совпадений выберем один фильм.</b>\nПосле выбора, сеанс завершится.</string>
     <string name="roulette_description_2">Остальные участники подключатся автоматически.</string>
     <string name="roulette_cancel">Отменить</string>
+    <string name="roulette_error">Упс... Ошибка</string>
 
     <string name="roulette_bottomsheet_dialog_trust_occasion">Доверьтесь\nслучаю</string>
     <string name="roulette_bottomsheet_dialog_if_you_like_movies">Если понравилось много фильмов и тяжело определиться, что же посмотреть.</string>

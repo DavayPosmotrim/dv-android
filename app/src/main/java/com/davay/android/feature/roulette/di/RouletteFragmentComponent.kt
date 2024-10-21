@@ -7,7 +7,11 @@ import dagger.Component
 
 @Component(
     dependencies = [AppComponent::class],
-    modules = [RouletteFragmentModule::class]
+    modules = [
+        RouletteDataModule::class,
+        RouletteUseCaseModule::class,
+        RouletteFragmentModule::class,
+    ]
 )
 @FragmentScope
 interface RouletteFragmentComponent : ScreenComponent {

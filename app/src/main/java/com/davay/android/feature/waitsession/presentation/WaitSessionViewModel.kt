@@ -62,8 +62,7 @@ class WaitSessionViewModel @Inject constructor(
             }
             leaveSessionUseCase.execute(sessionId)
         }
-        clearBackStackToMain()
-        navigate(R.id.action_mainFragment_to_createSessionFragment)
+        clearBackStackToMainAndNavigate(R.id.action_mainFragment_to_createSessionFragment)
     }
 
     fun navigateToNextScreen() {

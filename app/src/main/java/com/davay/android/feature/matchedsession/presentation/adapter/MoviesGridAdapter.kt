@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class MoviesGridAdapter(
     private val coroutineScope: CoroutineScope,
-    private val onItemClicked: (Int) -> Unit
+    private val onItemClicked: (MovieDetails) -> Unit
 ) : RecyclerView.Adapter<MoviesGridViewHolder>() {
 
     private val movies = mutableListOf<MovieDetails>()
@@ -19,7 +19,7 @@ class MoviesGridAdapter(
             itemView.setOnDebouncedClickListener(
                 coroutineScope = coroutineScope
             ) {
-                onItemClicked(movies[adapterPosition].id)
+                onItemClicked(movies[adapterPosition])
             }
         }
 

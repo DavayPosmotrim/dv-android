@@ -30,10 +30,8 @@ class UserAdapter : RecyclerView.Adapter<UserViewHolder>() {
     }
 
     fun updateItem(index: Int, item: UserRouletteModel) {
-        if (item.id == itemList[index].id && item.isConnected != itemList[index].isConnected) {
-            itemList[index].isConnected = item.isConnected
-            notifyItemChanged(index, item)
-        }
+        itemList[index].isConnected = item.isConnected
+        notifyItemChanged(index, item)
     }
 
     override fun onBindViewHolder(

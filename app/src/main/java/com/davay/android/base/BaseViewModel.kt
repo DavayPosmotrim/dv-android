@@ -46,6 +46,11 @@ abstract class BaseViewModel : ViewModel() {
         }
     }
 
+    private fun navigateWithoutDebounce(@IdRes navDirections: Int, navOptions: NavOptions) {
+        val command = NavigationCommand.ToDirection(navDirections, null, navOptions)
+        _navigation.value = Event(command)
+    }
+
     fun navigate(@IdRes navDirections: Int, bundle: Bundle, navOptions: NavOptions) {
         debounceNavigate(NavigationCommand.ToDirection(navDirections, bundle, navOptions)) { command ->
             _navigation.value = Event(command)
@@ -69,8 +74,16 @@ abstract class BaseViewModel : ViewModel() {
         navigate(R.id.mainFragment, navOptions)
     }
 
+    private fun clearBackStackToMainWithoutDebounce() {
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.main_navigation_graph, inclusive = true)
+            .build()
+
+        navigateWithoutDebounce(R.id.mainFragment, navOptions)
+    }
+
     fun clearBackStackToMainAndNavigate(@IdRes navDirections: Int) {
-        clearBackStackToMain()
+        clearBackStackToMainWithoutDebounce()
         navigate(navDirections)
     }
 
@@ -130,6 +143,7 @@ abstract class BaseViewModel : ViewModel() {
                         is Result.Error -> {
                             onFailure?.invoke(result.error)
                         }
+
                         null -> onSuccess(null)
                     }
                 }

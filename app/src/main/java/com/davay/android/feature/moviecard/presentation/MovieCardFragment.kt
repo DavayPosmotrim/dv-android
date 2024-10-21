@@ -2,11 +2,14 @@ package com.davay.android.feature.moviecard.presentation
 
 import android.os.Bundle
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.davai.extensions.dpToPx
+import com.davai.uikit.dialog.MainDialogFragment
 import com.davay.android.R
 import com.davay.android.base.BaseFragment
 import com.davay.android.base.BaseViewModel
 import com.davay.android.core.domain.models.MovieDetails
+import com.davay.android.core.domain.models.SessionStatus
 import com.davay.android.databinding.FragmentSelectMovieBinding
 import com.davay.android.di.AppComponentHolder
 import com.davay.android.di.ScreenComponent
@@ -15,6 +18,7 @@ import com.davay.android.feature.selectmovie.presentation.AdditionalInfoInflater
 import com.davay.android.utils.MovieDetailsHelper
 import com.davay.android.utils.MovieDetailsHelperImpl
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class MovieCardFragment :
@@ -42,6 +46,48 @@ class MovieCardFragment :
         hideButtonsOnCard()
         setToolbar()
         setViewsAndInflate()
+    }
+
+    override fun subscribe() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.sessionStatusState.collect { state ->
+                when (state) {
+                    SessionStatus.CLOSED -> showConfirmDialogAtSessionClosedStatus()
+                    SessionStatus.ROULETTE -> showConfirmDialogAndNavigateToRoulette()
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun showConfirmDialogAtSessionClosedStatus() {
+        val dialog = MainDialogFragment.newInstance(
+            title = getString(R.string.select_movies_session_is_closed),
+            message = getString(R.string.select_movies_user_left_session),
+            showConfirmBlock = true,
+            yesAction = {
+                viewModel.leaveSessionAndNavigateToHistory()
+            },
+            onCancelAction = {
+                viewModel.leaveSessionAndNavigateToHistory()
+            }
+        )
+        dialog.show(parentFragmentManager, null)
+    }
+
+    private fun showConfirmDialogAndNavigateToRoulette() {
+        val dialog = MainDialogFragment.newInstance(
+            title = getString(R.string.select_movies_roulette_is_running_title),
+            message = getString(R.string.select_movies_roulette_is_running_message),
+            showConfirmBlock = true,
+            yesAction = {
+                viewModel.navigate(R.id.action_movieCardFragment_to_rouletteFragment)
+            },
+            onCancelAction = {
+                viewModel.navigate(R.id.action_movieCardFragment_to_rouletteFragment)
+            }
+        )
+        dialog.show(parentFragmentManager, null)
     }
 
     private fun setToolbar() {
