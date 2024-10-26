@@ -16,7 +16,6 @@ import com.davay.android.databinding.FragmentSelectMovieBinding
 import com.davay.android.di.AppComponentHolder
 import com.davay.android.di.ScreenComponent
 import com.davay.android.extensions.SwipeDirection
-import com.davay.android.feature.coincidences.presentation.CoincidencesFragmentDirections
 import com.davay.android.feature.match.presentation.MatchBottomSheetFragment
 import com.davay.android.feature.selectmovie.di.DaggerSelectMovieFragmentComponent
 import com.davay.android.feature.selectmovie.presentation.adapters.MovieCardAdapter
@@ -90,7 +89,7 @@ class SelectMovieFragment :
                 viewModel.navigate(SelectMovieFragmentDirections.actionSelectMovieFragmentToCoincidencesFragment())
             }
             setStartIconClickListener {
-                showDialogAndNavigateToHistorySessions()
+                showleaveSessionDialog()
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -108,7 +107,10 @@ class SelectMovieFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sessionStatusState.collect { state ->
                 when (state) {
-                    SessionStatus.CLOSED -> showConfirmDialogAtSessionClosedStatus()
+                    SessionStatus.CLOSED -> {
+                        showConfirmDialogAtSessionClosedStatus()
+                    }
+
                     SessionStatus.ROULETTE -> showConfirmDialogAndNavigateToRoulette()
                     else -> {}
                 }
@@ -216,18 +218,12 @@ class SelectMovieFragment :
         dialog.show(parentFragmentManager, null)
     }
 
-    /**
-     * Метод вызывается у юзеров, у которых из сессии вышел участник
-     * !добавить сохранение сессии в БД тут и в showDialogAndNavigateToHistorySessions()
-     */
-    @Suppress("Detekt.UnusedPrivateMember")
-    private fun showConfirmDialogAndNavigateToHistorySessions() {
+    private fun showleaveSessionDialog() {
         val dialog = MainDialogFragment.newInstance(
             title = getString(R.string.leave_session_title),
-            message = getString(R.string.leave_session_dialog_message_session_complited),
-            showConfirmBlock = true,
+            message = getString(R.string.select_movies_leave_session_dialog_message),
             yesAction = {
-                viewModel.leaveSessionAndNavigateToHistory()
+                viewModel.getSessionDataSaveToDbAndLeaveSession()
             }
         )
         dialog.show(parentFragmentManager, null)
@@ -236,13 +232,13 @@ class SelectMovieFragment :
     private fun showConfirmDialogAtSessionClosedStatus() {
         val dialog = MainDialogFragment.newInstance(
             title = getString(R.string.select_movies_session_is_closed),
-            message = getString(R.string.select_movies_user_left_session),
+            message = getString(R.string.leave_session_dialog_message_session_complited),
             showConfirmBlock = true,
             yesAction = {
-                viewModel.leaveSessionAndNavigateToHistory()
+                viewModel.getSessionDataSaveToDbAndLeaveSession()
             },
             onCancelAction = {
-                viewModel.leaveSessionAndNavigateToHistory()
+                viewModel.getSessionDataSaveToDbAndLeaveSession()
             }
         )
         dialog.show(parentFragmentManager, null)
@@ -421,6 +417,6 @@ class SelectMovieFragment :
         const val BOTTOMSHEET_PEEK_HEIGHT_112_DP = 112
         const val MARGIN_TOP_16_DP = 16
         const val CURRENT_POSITION_KEY = "currentPosition"
+        val TAG = SelectMovieFragment::class.simpleName
     }
 }
-

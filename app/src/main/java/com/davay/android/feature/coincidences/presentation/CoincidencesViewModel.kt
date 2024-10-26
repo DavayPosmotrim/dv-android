@@ -6,6 +6,7 @@ import com.davay.android.BuildConfig
 import com.davay.android.base.BaseViewModel
 import com.davay.android.core.domain.impl.CommonWebsocketInteractor
 import com.davay.android.core.domain.impl.GetMatchesUseCase
+import com.davay.android.core.domain.impl.GetSessionDataAndSaveToDbUseCase
 import com.davay.android.core.domain.impl.LeaveSessionUseCase
 import com.davay.android.core.domain.models.ErrorScreenState
 import com.davay.android.core.domain.models.Result
@@ -22,7 +23,8 @@ class CoincidencesViewModel @Inject constructor(
     private val coincidencesInteractor: CoincidencesInteractor,
     private val getMatchesUseCase: GetMatchesUseCase,
     private val commonWebsocketInteractor: CommonWebsocketInteractor,
-    private val leaveSessionUseCase: LeaveSessionUseCase
+    private val leaveSessionUseCase: LeaveSessionUseCase,
+    private val getSessionDataAndSaveToDbUseCase: GetSessionDataAndSaveToDbUseCase
 ) : BaseViewModel() {
 
     private val _state: MutableStateFlow<CoincidencesState> =
@@ -73,6 +75,23 @@ class CoincidencesViewModel @Inject constructor(
         disconnect()
         navigate(action)
     }
+
+    fun getSessionDataAndSaveToDb() {
+        Log.i(TAG, "getSessionDataAndSaveToDb")
+        val sessionId = commonWebsocketInteractor.sessionId
+        runCatching {
+            getSessionDataAndSaveToDbUseCase(sessionId)
+        }.onFailure {
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "Failure on get session data and save to db")
+            }
+        }.onSuccess {
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "Success on get session data and save to db")
+            }
+        }
+    }
+
 
     private fun disconnect() {
         viewModelScope.launch(Dispatchers.IO) {

@@ -1,8 +1,10 @@
 package com.davay.android.feature.selectmovie.di
 
 import com.davay.android.core.domain.api.GetMatchesRepository
+import com.davay.android.core.domain.api.GetSessionRepository
 import com.davay.android.core.domain.impl.CommonWebsocketInteractor
 import com.davay.android.core.domain.impl.GetMatchesUseCase
+import com.davay.android.core.domain.impl.GetSessionDataAndSaveToDbUseCase
 import com.davay.android.feature.selectmovie.domain.FilterDislikedMovieListUseCase
 import com.davay.android.feature.selectmovie.domain.GetMovieDetailsByIdUseCase
 import com.davay.android.feature.selectmovie.domain.GetMovieIdListSizeUseCase
@@ -43,4 +45,9 @@ class SelectMovieDomainModule {
         repository: GetMatchesRepository,
         commonWebsocketInteractor: CommonWebsocketInteractor
     ) = GetMatchesUseCase(repository, commonWebsocketInteractor)
+
+    @Provides
+    fun provideGetSessionDataAndSaveToDbUseCase(
+        repository: GetSessionRepository
+    ) = GetSessionDataAndSaveToDbUseCase(repository)
 }

@@ -29,6 +29,7 @@ import com.davay.android.utils.presentation.UiErrorHandlerImpl
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@Suppress("LargeClass")
 class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, CoincidencesViewModel>(
     FragmentCoincidencesBinding::inflate
 ) {
@@ -157,7 +158,11 @@ class CoincidencesFragment : BaseFragment<FragmentCoincidencesBinding, Coinciden
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sessionStatusState.collect { state ->
                 when (state) {
-                    SessionStatus.CLOSED -> showConfirmDialogAtSessionClosedStatus()
+                    SessionStatus.CLOSED -> {
+                        viewModel.getSessionDataAndSaveToDb()
+                        showConfirmDialogAtSessionClosedStatus()
+                    }
+
                     SessionStatus.ROULETTE -> showConfirmDialogAndNavigateToRoulette()
                     else -> {}
                 }

@@ -2,8 +2,6 @@ package com.davay.android.core.data.network
 
 import android.content.Context
 import com.davay.android.core.data.network.model.NetworkParams
-import com.davay.android.core.data.network.model.getmatches.GetMatchesRequest
-import com.davay.android.core.data.network.model.getmatches.GetMatchesResponse
 import com.davay.android.core.data.network.model.getsession.GetSessionRequest
 import com.davay.android.core.data.network.model.getsession.GetSessionResponse
 import io.ktor.client.HttpClient

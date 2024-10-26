@@ -6,6 +6,7 @@ import com.davay.android.BuildConfig
 import com.davay.android.base.BaseViewModel
 import com.davay.android.core.domain.impl.CommonWebsocketInteractor
 import com.davay.android.core.domain.impl.GetMatchesUseCase
+import com.davay.android.core.domain.impl.GetSessionDataAndSaveToDbUseCase
 import com.davay.android.core.domain.impl.LeaveSessionUseCase
 import com.davay.android.core.domain.models.ErrorScreenState
 import com.davay.android.core.domain.models.MovieDetails
@@ -34,7 +35,8 @@ class SelectMovieViewModel @Inject constructor(
     private val likeMovieInteractor: LikeMovieInteractor,
     private val getMovieDetailsById: GetMovieDetailsByIdUseCase,
     private val leaveSessionUseCase: LeaveSessionUseCase,
-    private val getMatchesUseCase: GetMatchesUseCase
+    private val getMatchesUseCase: GetMatchesUseCase,
+    private val getSessionDataAndSaveToDbUseCase: GetSessionDataAndSaveToDbUseCase
 ) : BaseViewModel() {
     private val _state = MutableStateFlow<SelectMovieState>(SelectMovieState.Loading)
     val state
@@ -150,6 +152,24 @@ class SelectMovieViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun getSessionDataSaveToDbAndLeaveSession() {
+        Log.i(TAG, "getSessionDataAndSaveToDb")
+        val sessionId = commonWebsocketInteractor.sessionId
+        runCatching {
+            getSessionDataAndSaveToDbUseCase(sessionId)
+        }.onFailure {
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "Success on get session data and save to db")
+            }
+            leaveSessionAndNavigateToHistory()
+        }.onSuccess {
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "Success on get session data and save to db")
+            }
+            leaveSessionAndNavigateToHistory()
         }
     }
 
@@ -285,5 +305,4 @@ class SelectMovieViewModel @Inject constructor(
         const val PRELOAD_SIZE = 5
         val TAG: String = SelectMovieViewModel::class.java.simpleName
     }
-
 }
