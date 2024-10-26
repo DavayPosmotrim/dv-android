@@ -6,8 +6,8 @@ import com.davay.android.BuildConfig
 import com.davay.android.core.data.converters.toDomain
 import com.davay.android.core.data.database.HistoryDao
 import com.davay.android.core.data.network.HttpNetworkClient
-import com.davay.android.core.data.network.model.getmatches.GetSessionRequest
-import com.davay.android.core.data.network.model.getmatches.GetSessionResponse
+import com.davay.android.core.data.network.model.getmatches.GetMatchesRequest
+import com.davay.android.core.data.network.model.getmatches.GetMatchesResponse
 import com.davay.android.core.data.network.model.mapToErrorType
 import com.davay.android.core.domain.api.GetMatchesRepository
 import com.davay.android.core.domain.api.UserDataRepository
@@ -20,19 +20,19 @@ import javax.inject.Inject
 
 class GetMatchesRepositoryIml @Inject constructor(
     private val userDataRepository: UserDataRepository,
-    private val httpNetworkClient: HttpNetworkClient<GetSessionRequest, GetSessionResponse>,
+    private val httpNetworkClient: HttpNetworkClient<GetMatchesRequest, GetMatchesResponse>,
     private val historyDao: HistoryDao
 ) : GetMatchesRepository {
     override fun getMatches(sessionId: String): Flow<Result<List<MovieDetails>, ErrorType>> = flow {
         val deviceId = userDataRepository.getUserId()
         val response = httpNetworkClient.getResponse(
-            GetSessionRequest(
+            GetMatchesRequest(
                 sessionId = sessionId,
                 userId = deviceId
             )
         )
         when (val body = response.body) {
-            is GetSessionResponse.Session -> {
+            is GetMatchesResponse.Session -> {
                 val matchedMovieIdList = body.value
                 val matchedMovies = matchedMovieIdList.mapNotNull { movie ->
                     getMovieDetails(movie.id)

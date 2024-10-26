@@ -125,7 +125,7 @@ class RouletteViewModel @Inject constructor(
         }
     }
 
-    private suspend fun closeSockets() {
+    private fun closeSockets() {
         viewModelScope.launch {
             commonWebsocketInteractor.unsubscribeWebsockets()
         }

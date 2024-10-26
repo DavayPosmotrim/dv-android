@@ -7,8 +7,8 @@ import com.davay.android.core.data.impl.GetMatchesRepositoryIml
 import com.davay.android.core.data.impl.UserDataRepositoryImpl
 import com.davay.android.core.data.network.HttpGetMatchesKtorClient
 import com.davay.android.core.data.network.HttpKtorNetworkClient
-import com.davay.android.core.data.network.model.getmatches.GetSessionRequest
-import com.davay.android.core.data.network.model.getmatches.GetSessionResponse
+import com.davay.android.core.data.network.model.getmatches.GetMatchesRequest
+import com.davay.android.core.data.network.model.getmatches.GetMatchesResponse
 import com.davay.android.core.domain.api.GetMatchesRepository
 import com.davay.android.core.domain.api.UserDataRepository
 import com.davay.android.di.prefs.marker.StorageMarker
@@ -80,14 +80,14 @@ class SelectMovieDataModule {
     fun provideGetSessionHttpNetworkClient(
         context: Context,
         httpClient: HttpClient
-    ): HttpKtorNetworkClient<GetSessionRequest, GetSessionResponse> {
+    ): HttpKtorNetworkClient<GetMatchesRequest, GetMatchesResponse> {
         return HttpGetMatchesKtorClient(context, httpClient)
     }
 
     @Provides
     fun provideGetMatchesRepository(
         userDataRepository: UserDataRepository,
-        httpNetworkClient: HttpKtorNetworkClient<GetSessionRequest, GetSessionResponse>,
+        httpNetworkClient: HttpKtorNetworkClient<GetMatchesRequest, GetMatchesResponse>,
         appDatabase: AppDatabase
     ): GetMatchesRepository {
         return GetMatchesRepositoryIml(

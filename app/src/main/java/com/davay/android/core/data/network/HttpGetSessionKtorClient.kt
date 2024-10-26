@@ -4,6 +4,8 @@ import android.content.Context
 import com.davay.android.core.data.network.model.NetworkParams
 import com.davay.android.core.data.network.model.getmatches.GetMatchesRequest
 import com.davay.android.core.data.network.model.getmatches.GetMatchesResponse
+import com.davay.android.core.data.network.model.getsession.GetSessionRequest
+import com.davay.android.core.data.network.model.getsession.GetSessionResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -12,11 +14,11 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.path
 import javax.inject.Inject
 
-class HttpGetMatchesKtorClient @Inject constructor(
+class HttpGetSessionKtorClient @Inject constructor(
     context: Context,
     private val httpClient: HttpClient
-) : HttpKtorNetworkClient<GetMatchesRequest, GetMatchesResponse>(context) {
-    override suspend fun sendRequestByType(request: GetMatchesRequest): HttpResponse {
+) : HttpKtorNetworkClient<GetSessionRequest, GetSessionResponse>(context) {
+    override suspend fun sendRequestByType(request: GetSessionRequest): HttpResponse {
         return httpClient.get {
             url {
                 path(request.path)
@@ -29,9 +31,9 @@ class HttpGetMatchesKtorClient @Inject constructor(
     }
 
     override suspend fun getResponseBodyByRequestType(
-        requestType: GetMatchesRequest,
+        requestType: GetSessionRequest,
         httpResponse: HttpResponse
-    ): GetMatchesResponse {
-        return GetMatchesResponse.Session(httpResponse.body())
+    ): GetSessionResponse {
+        return GetSessionResponse.Session(httpResponse.body())
     }
 }
