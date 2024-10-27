@@ -10,6 +10,9 @@ import com.davay.android.core.domain.models.ErrorType
 import com.davay.android.core.domain.models.Result
 import com.davay.android.core.domain.models.Session
 import com.davay.android.core.domain.models.SessionWithMovies
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SessionsHistoryRepositoryImpl @Inject constructor(
@@ -44,14 +47,21 @@ class SessionsHistoryRepositoryImpl @Inject constructor(
             null
         }
 
-    override suspend fun getSessionsHistory(): List<Session> =
+    override fun getSessionsHistory(): Flow<List<Session>> {
         @Suppress("TooGenericExceptionCaught", "PrintStackTrace")
-        try {
-            historyDao.getSessions().map { it.toDomain() }
+        return try {
+            historyDao.getSessions().map { list ->
+                list.map { session ->
+                    session.toDomain()
+                }.reversed()
+            }
         } catch (e: Exception) {
             if (BuildConfig.DEBUG) {
                 e.printStackTrace()
             }
-            emptyList()
+            flow {
+                emit(emptyList())
+            }
         }
+    }
 }

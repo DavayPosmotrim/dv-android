@@ -8,13 +8,14 @@ import com.davay.android.core.data.database.entity.MovieDetailsEntity
 import com.davay.android.core.data.database.entity.SessionEntity
 import com.davay.android.core.data.database.entity.SessionMovieCrossRef
 import com.davay.android.core.data.database.entity.SessionWithMoviesDb
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HistoryDao {
 
     // Получение всех сохраненных сессий
     @Query("SELECT * FROM sessions")
-    suspend fun getSessions(): List<SessionEntity>
+    fun getSessions(): Flow<List<SessionEntity>>
 
     // Получение по sessionId сессии с её списком фильмов.
     @Transaction
